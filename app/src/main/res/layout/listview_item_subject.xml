@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
+
+    <TextView
+        android:id="@+id/item_subject_name"
+        style="@style/AppTheme.PrimaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_preview_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_subject_teacher"
+        style="@style/AppTheme.SecondaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/label_preview_teacher"
+        app:layout_constraintBottom_toBottomOf="@id/item_subject_name"
+        app:layout_constraintLeft_toRightOf="@+id/item_subject_name"
+        app:layout_constraintTop_toTopOf="@+id/item_subject_name" />
+
+    <TextView
+        android:id="@+id/item_subject_category"
+        style="@style/AppTheme.SecondaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_preview_category"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_subject_name" />
+
+    <ImageView
+        android:id="@+id/item_subject_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_delete_icon"
+        app:srcCompat="@drawable/ic_delete_24px"
+        app:layout_constraintBottom_toBottomOf="@id/item_subject_category"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/item_subject_name" />
+
+</android.support.constraint.ConstraintLayout>

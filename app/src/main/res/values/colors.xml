@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="primary_light">#C8E6C9</color>
+    <color name="accent">#FF5722</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <color name="done">#9CCC65</color>
+    <color name="todo">#ef5350</color>
+    <color name="primary_text_inverse">#dedede</color>
+    <color name="secondary_text_inverse">#8a8a8a</color>
+
+    <color name="test_priority0">#9ccc65</color>
+    <color name="test_priority1">#b0ad5f</color>
+    <color name="test_priority2">#c58f5a</color>
+    <color name="test_priority3">#da7155</color>
+    <color name="test_priority4">#ef5350</color>
+
+    <color name="homework_priority0">#f59796</color>
+    <color name="homework_priority1">#f38684</color>
+    <color name="homework_priority2">#f27572</color>
+    <color name="homework_priority3">#f06461</color>
+    <color name="homework_priority4">#ef5350</color>
+
+</resources>

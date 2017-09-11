@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
+
+    <TextView
+        android:id="@+id/item_exam_subject"
+        style="@style/AppTheme.PrimaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_preview_subject"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_exam_topic"
+        style="@style/AppTheme.PrimaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/label_preview_topic"
+        app:layout_constraintStart_toEndOf="@id/item_exam_subject"
+        app:layout_constraintTop_toTopOf="@id/item_exam_subject" />
+
+    <TextView
+        android:id="@+id/item_exam_date"
+        style="@style/AppTheme.SecondaryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_preview_date"
+        app:layout_constraintStart_toStartOf="@id/item_exam_subject"
+        app:layout_constraintTop_toBottomOf="@id/item_exam_subject" />
+
+    <ImageView
+        android:id="@+id/item_exam_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_delete_icon"
+        app:srcCompat="@drawable/ic_delete_24px"
+        app:layout_constraintBottom_toBottomOf="@id/item_exam_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/item_exam_subject" />
+
+</android.support.constraint.ConstraintLayout>

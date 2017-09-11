@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        applicationId "org.thecoders.smarttable"
+        minSdkVersion 15
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //Support libraries
+    compile "com.android.support:support-v4:$supportLibs_version"
+    compile "com.android.support:appcompat-v7:$supportLibs_version"
+    compile "com.android.support:design:$supportLibs_version"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    //Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    //Lifecycle
+    compile "android.arch.lifecycle:extensions:$lifecycle_version"
+    kapt "android.arch.lifecycle:compiler:$lifecycle_version"
+
+    //Room persistence Library
+    compile "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
+
+    //Butter Knife
+    compile "com.jakewharton:butterknife:$butterknife_version"
+    kapt "com.jakewharton:butterknife-compiler:$butterknife_version"
+
+    //Dagger 2
+    compile "com.google.dagger:dagger:$dagger_version"
+    kapt "com.google.dagger:dagger-compiler:$dagger_version"
+
+    // RxJava support for Room
+    compile "android.arch.persistence.room:rxjava2:$rxjava_version"
+
+    //Color Picker
+    compile 'com.github.eltos:simpledialogfragment:2.1'
+
+    //Testing support
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile "android.arch.core:core-testing:$rxjava_version"
+
+    androidTestCompile "com.android.support:support-compat:$supportLibs_version"
+    androidTestCompile "com.android.support:support-annotations:$supportLibs_version"
+
+
+    testCompile 'junit:junit:4.12'
+}
+repositories {
+    mavenCentral()
+}
