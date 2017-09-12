@@ -3,25 +3,22 @@ package org.thecoders.smarttable.ui
 import android.arch.lifecycle.ViewModelProviders
 import android.content.ClipData
 import android.content.ClipDescription
-import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.DragEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ListView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
-import kotlinx.android.synthetic.main.listview_item_subject_button.view.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.RearrangeableListView
 import org.thecoders.smarttable.TimeHelper
@@ -32,7 +29,6 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
 /**
  * Created by frenz on 30.07.2017.
- * TODO: The Button Bar at the bottom only works vertically which is not convenient!
  */
 
 class Fragment_ModifyDay : Fragment() {
@@ -41,12 +37,12 @@ class Fragment_ModifyDay : Fragment() {
 
     private lateinit var mUnbinder: Unbinder
     private lateinit var mSubjectViewModel: SubjectViewModel
-    lateinit var mLessonViewModel: LessonViewModel
+    private lateinit var mLessonViewModel: LessonViewModel
 
     private lateinit var mDay: String
 
     @BindView(R.id.modifyday_listview) lateinit var mListView: RearrangeableListView
-    @BindView(R.id.modifyday_subjectbar) lateinit var mSubjectBar: ListView
+    @BindView(R.id.modifyday_subjectbar) lateinit var mSubjectBar: RecyclerView
 
     companion object {
         private lateinit var mLessonAdapter: Adapter_Lesson
@@ -75,11 +71,11 @@ class Fragment_ModifyDay : Fragment() {
         LessonViewModel.Companion.LoadLessonsIntoAdapter(mLessonAdapter, mDay, mLessonViewModel).execute()
         mListView.adapter = mLessonAdapter
 
-        mSubjectButtonAdapter = Adapter_SubjectButtons(
-                context = context,
-                layoutResourceId = R.layout.listview_item_subject_button,
-                data = mutableListOf()
-        )
+        mSubjectButtonAdapter = Adapter_SubjectButtons(data = mutableListOf())
+
+        val mLayoutManager = LinearLayoutManager(context)
+        mLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        mSubjectBar.layoutManager = mLayoutManager
 
         LoadSubjectList(mSubjectViewModel).execute()
         mSubjectBar.adapter = mSubjectButtonAdapter
@@ -136,51 +132,48 @@ class Fragment_ModifyDay : Fragment() {
     }
 
 
-    class Adapter_SubjectButtons(context: Context, val layoutResourceId: Int, data: MutableList<String>)
-        : ArrayAdapter<String>(context, layoutResourceId, data) {
 
-        private class SubjectHolder {
-            lateinit var mButton: Button
+
+    class Adapter_SubjectButtons(var data: MutableList<String>)
+        : RecyclerView.Adapter<Adapter_SubjectButtons.SubjectViewHolder>() {
+
+        class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            fun bind(subjectName: String) {
+                val mButton = itemView.findViewById<Button>(R.id.item_subjectbutton_button)
+                mButton.text = subjectName
+                mButton.setOnLongClickListener {
+                    it.tag = subjectName
+
+                    val item = ClipData.Item(it.tag.toString())
+                    val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
+                    val data = ClipData(it.tag.toString(), mimeTypes, item)
+
+                    val shadowBuilder = View.DragShadowBuilder(it)
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        it.startDragAndDrop(data, shadowBuilder, null, 0)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        it.startDrag(data, shadowBuilder, null, 0)
+                    }
+                    true
+                }
+            }
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            var row = convertView
-            val holder: SubjectHolder
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
+            val button = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.listview_item_subject_button, parent, false)
 
-            if(row == null) {
-                val inflater = (context as AppCompatActivity).layoutInflater
+            return SubjectViewHolder(button)
+        }
 
-                row = inflater.inflate(layoutResourceId, parent, false)
-                holder = SubjectHolder()
+        override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
+            holder.bind(data[position])
+        }
 
-                holder.mButton = row.item_subjectbutton_button
-                row.tag = holder
-            } else {
-                holder = row.tag as SubjectHolder
-            }
-
-            val subjectName = getItem(position)
-
-            holder.mButton.text = subjectName
-            holder.mButton.setOnLongClickListener {
-                it.tag = subjectName
-
-                val item = ClipData.Item(it.tag.toString())
-                val mimeTypes = arrayOf(ClipDescription.MIMETYPE_TEXT_PLAIN)
-                val data = ClipData(it.tag.toString(), mimeTypes, item)
-
-                val shadowBuilder = View.DragShadowBuilder(it)
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    it.startDragAndDrop(data, shadowBuilder, null, 0)
-                } else {
-                    @Suppress("DEPRECATION")
-                    it.startDrag(data, shadowBuilder, null, 0)
-                }
-                true
-            }
-
-            return row!!
+        override fun getItemCount(): Int {
+            return data.count()
         }
     }
 
@@ -188,11 +181,9 @@ class Fragment_ModifyDay : Fragment() {
         override fun doInBackground(vararg params: String?): List<String> =
                 subjectViewModel.loadSubjectNames()
 
-        override fun onPostExecute(result: List<String>?) {
-            if(result != null) {
-                mSubjectButtonAdapter.clear()
-                result.forEach { mSubjectButtonAdapter.add(it) }
-            }
+        override fun onPostExecute(result: List<String>) {
+            mSubjectButtonAdapter.data = result as MutableList<String>
+            mSubjectButtonAdapter.notifyDataSetChanged()
         }
     }
 }
