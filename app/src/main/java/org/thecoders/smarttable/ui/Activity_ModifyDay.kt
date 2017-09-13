@@ -15,15 +15,20 @@ import org.thecoders.smarttable.viewmodel.LessonViewModel
 
 class Activity_ModifyDay : AppCompatActivity() {
 
+    interface SaveDayListener {
+        fun getLessonsToSave(): MutableList<Lesson>
+    }
+
     lateinit var mLessonViewModel: LessonViewModel
-    lateinit var mModifyDayFragment: Fragment_ModifyDay
+    private lateinit var mModifyDayFragment: Fragment_ModifyDay
     lateinit var mDay: String
+    private lateinit var mCallback: SaveDayListener
 
     companion object {
         private val LOG_TAG = Activity_ModifyDay::class.java.simpleName
-
-
     }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +42,13 @@ class Activity_ModifyDay : AppCompatActivity() {
                 return
 
             mModifyDayFragment = Fragment_ModifyDay()
-
             mModifyDayFragment.arguments = intent.extras
+
+            mCallback = try {
+                mModifyDayFragment
+            } catch (e: ClassCastException) {
+                throw ClassCastException(mModifyDayFragment.toString() + "must implement OnAddHomeworkPressedListener")
+            }
 
             supportFragmentManager.beginTransaction()
                     .add(R.id.activity_modifyday_content, mModifyDayFragment)
@@ -57,43 +67,27 @@ class Activity_ModifyDay : AppCompatActivity() {
 
         if (id == R.id.action_save) {
 
-            return SaveLessons().execute().get()
-        }
+            val data: MutableList<Lesson> = mCallback.getLessonsToSave()
 
-        return super.onOptionsItemSelected(item)
-    }
+            AsyncTask.execute {
+                val tableCount = mLessonViewModel.loadMondayLessons().size
+                var dataLength = data.size
 
-    inner class SaveLessons : AsyncTask<Lesson, Int, Boolean>() {
+                while (dataLength < tableCount) {
+                    dataLength++
+                    data.add(Lesson(dataLength.toLong()))
+                }
 
-        private var tableCount: Int = 0
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            tableCount = mLessonViewModel.loadMondayLessons().size
-        }
-
-        override fun doInBackground(vararg lessons: Lesson): Boolean {
-
-            val data = lessons.toMutableList()
-            var dataLength = data.size
-
-            while (dataLength <= tableCount) {
-                data.add(dataLength, Lesson(dataLength.toLong()))
-                dataLength++
+                data.forEach {
+                    mLessonViewModel.insertOrUpdateLesson(it, mDay)
+                    Log.v(LOG_TAG, it.toString())
+                }
             }
 
-            data.forEach {
-                mLessonViewModel.insertOrUpdateLesson(it, mDay)
-                Log.v(LOG_TAG, it.toString())
-            }
-
+            NavUtils.navigateUpFromSameTask(this)
             return true
         }
 
-        override fun onPostExecute(result: Boolean?) {
-            super.onPostExecute(result)
-            NavUtils.navigateUpFromSameTask(this@Activity_ModifyDay)
-            Log.v(LOG_TAG, "Day saved! :)")
-        }
+        return super.onOptionsItemSelected(item)
     }
 }

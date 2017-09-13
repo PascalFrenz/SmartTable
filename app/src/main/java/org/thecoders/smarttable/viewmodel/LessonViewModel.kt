@@ -14,7 +14,6 @@ import javax.inject.Inject
  */
 class LessonViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val LOG_TAG = LessonViewModel::class.java.simpleName
 
     @Inject lateinit var db: AppDatabase
 
@@ -37,37 +36,39 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
     fun insert(row: TimetableRow) = AsyncTask.execute { db.timetableModel().insert(row) }
 
     fun insertOrUpdateLesson(lesson: Lesson, day: String) {
-        val lessonCount = loadMondayLessons().lastIndex + 1
-        Log.v(LOG_TAG, "LessonCount: $lessonCount\nLessonID: ${lesson.id}" )
+        val lastLessonId: Int =
+                if(loadMondayLessons().lastIndex == -1) 0
+                else loadMondayLessons().lastIndex + 1
+        Log.v(LOG_TAG, "LastLessonId: $lastLessonId\n" + lesson.toString() )
 
         when (day) {
             "monday" -> {
                 val lessonMon = LessonMon(lesson.id, lesson.timing, lesson.subjectName)
-                if (lesson.id <= lessonCount) updateMondayLesson(lessonMon)
+                if (lesson.id <= lastLessonId) updateMondayLesson(lessonMon)
                 else insert(TimetableRow(id = lessonMon.id, mon_timing = lessonMon.mon_timing, mon = lessonMon.mon))
             }
 
             "tuesday" -> {
                 lesson as LessonTue
-                if(lesson.id <= lessonCount) updateTuesdayLesson(lesson)
+                if(lesson.id <= lastLessonId) updateTuesdayLesson(lesson)
                 else insert(TimetableRow(id = lesson.id, tue_timing = lesson.tue_timing, tue = lesson.tue))
             }
 
             "wednesday" -> {
                 lesson as LessonWed
-                if(lesson.id <= lessonCount) updateWednesdayLesson(lesson)
+                if(lesson.id <= lastLessonId) updateWednesdayLesson(lesson)
                 else insert(TimetableRow(id = lesson.id, wed_timing = lesson.wed_timing, wed = lesson.wed))
             }
 
             "thursday" -> {
                 lesson as LessonThu
-                if(lesson.id <= lessonCount) updateThursdayLesson(lesson)
+                if(lesson.id <= lastLessonId) updateThursdayLesson(lesson)
                 else insert(TimetableRow(id = lesson.id, thu_timing = lesson.thu_timing, thu = lesson.thu))
             }
 
             "friday" -> {
                 lesson as LessonFri
-                if(lesson.id <= lessonCount) updateFridayLesson(lesson)
+                if(lesson.id <= lastLessonId) updateFridayLesson(lesson)
                 else insert(TimetableRow(id = lesson.id, fri_timing = lesson.fri_timing, fri = lesson.fri))
             }
         }
@@ -79,6 +80,8 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
             }
 
     companion object {
+        private val LOG_TAG = LessonViewModel::class.java.simpleName
+
         class LoadLessonsIntoAdapter(
                 val adapter: Adapter_Lesson,
                 private val day: String,
@@ -87,7 +90,7 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
 
             override fun doInBackground(vararg params: String?): List<Lesson> {
                 return when (day) {
-                    "monday" -> lessonViewModel.loadMondayLessons()
+                    "monday" -> lessonViewModel.loadMondayLessons().filter { it.mon != "NULL" }
                     "tuesday" -> lessonViewModel.loadTuesdayLessons()
                     "wednesday" -> lessonViewModel.loadWednesdayLessons()
                     "thursday" -> lessonViewModel.loadThursdayLessons()
@@ -99,7 +102,10 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
             override fun onPostExecute(result: List<Lesson>) {
                 if(result.isNotEmpty()) {
                     adapter.clear()
-                    result.forEach(adapter::add)
+                    result.forEach {
+                        adapter.add(it)
+                        Log.v(LOG_TAG, it.toString())
+                    }
                 }
             }
         }

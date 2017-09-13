@@ -31,7 +31,7 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
  * Created by frenz on 30.07.2017.
  */
 
-class Fragment_ModifyDay : Fragment() {
+class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
 
     private val LOG_TAG = Fragment_ModifyDay::class.java.simpleName
 
@@ -88,6 +88,12 @@ class Fragment_ModifyDay : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         mUnbinder.unbind()
+    }
+
+    override fun getLessonsToSave(): MutableList<Lesson> {
+        val lessons = mLessonAdapter.data
+        lessons.forEach { it.id++ }
+        return lessons
     }
 
     private fun initListView() {
