@@ -65,7 +65,7 @@ class Fragment_CreateHomework : Fragment() {
         val rootView = inflater?.inflate(R.layout.fragment_create_homework, container, false) as View
         mUnbinder = ButterKnife.bind(this, rootView)
 
-        mLessonSubjectAdapter = ArrayAdapter<String>(
+        mLessonSubjectAdapter = ArrayAdapter(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
                 mutableListOf()
