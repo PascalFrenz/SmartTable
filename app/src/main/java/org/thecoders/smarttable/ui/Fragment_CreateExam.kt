@@ -33,10 +33,6 @@ class Fragment_CreateExam : LifecycleFragment() {
     private lateinit var mLessonSubjectAdapter: ArrayAdapter<String>
     private lateinit var mSubjects: List<String>
 
-    companion object {
-
-    }
-
     @BindView(R.id.createexam_subject) lateinit var mSubject: Spinner
     @BindView(R.id.createexam_topic) lateinit var mTopic: EditText
     @BindView(R.id.createexam_date) lateinit var mDate: EditText
