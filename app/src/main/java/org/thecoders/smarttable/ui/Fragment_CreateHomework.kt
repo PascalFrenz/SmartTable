@@ -1,11 +1,11 @@
 package org.thecoders.smarttable.ui
 
+import android.arch.lifecycle.LifecycleFragment
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +23,7 @@ import org.thecoders.smarttable.data.Homework
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 import java.util.*
 
-class Fragment_CreateHomework : Fragment() {
+class Fragment_CreateHomework : LifecycleFragment() {
 
     interface OnAddHomeworkPressedListener {
         /**
@@ -33,10 +33,8 @@ class Fragment_CreateHomework : Fragment() {
     }
 
     private lateinit var mSubjectViewModel: SubjectViewModel
-
-    companion object {
-        private lateinit var mLessonSubjectAdapter: ArrayAdapter<String>
-    }
+    private lateinit var mLessonSubjectAdapter: ArrayAdapter<String>
+    private lateinit var mSubjects: List<String>
 
     @BindView(R.id.createhomework_subject) lateinit var mSubject: Spinner
     @BindView(R.id.createhomework_task) lateinit var mTask: EditText
@@ -71,9 +69,15 @@ class Fragment_CreateHomework : Fragment() {
                 mutableListOf()
         )
 
-        LoadSubjectNames(mSubjectViewModel).execute()
-
         mSubject.adapter = mLessonSubjectAdapter
+
+        mSubjectViewModel.subjectNamesList.observe(this, Observer {
+            if (it != null) {
+                mSubjects = it
+                mLessonSubjectAdapter.clear()
+                mLessonSubjectAdapter.addAll(mSubjects)
+            }
+        })
 
         return rootView
     }
@@ -109,19 +113,4 @@ class Fragment_CreateHomework : Fragment() {
     @OnClick(R.id.createhomework_deadline_btn)
     fun showDatePicker() = Fragment_DatePicker().show(activity.fragmentManager, "datePicker")
 
-
-    //Used to load a list of lesson subjects as strings in an async way and then add them to an
-    //adapter
-    class LoadSubjectNames(private val subjectViewModel: SubjectViewModel) : AsyncTask<String, Int, List<String>>() {
-
-        override fun doInBackground(vararg params: String?): List<String>
-                = subjectViewModel.loadSubjectNames()
-
-        override fun onPostExecute(result: List<String>?) {
-            if(result != null) {
-                mLessonSubjectAdapter.clear()
-                for (subject in result) mLessonSubjectAdapter.add(subject)
-            }
-        }
-    }
 }

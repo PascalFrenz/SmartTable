@@ -1,11 +1,11 @@
 package org.thecoders.smarttable.ui
 
+import android.arch.lifecycle.LifecycleFragment
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,16 +23,18 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
  * Created by frenz on 02.07.2017.
  */
 
-class Fragment_CreateExam : Fragment() {
+class Fragment_CreateExam : LifecycleFragment() {
 
     interface OnAddExamPressedListener {
         fun onAddExamRequested(exam: Exam)
     }
 
     private lateinit var mSubjectViewModel: SubjectViewModel
+    private lateinit var mLessonSubjectAdapter: ArrayAdapter<String>
+    private lateinit var mSubjects: List<String>
 
     companion object {
-        private lateinit var mLessonSubjectAdapter: ArrayAdapter<String>
+
     }
 
     @BindView(R.id.createexam_subject) lateinit var mSubject: Spinner
@@ -66,9 +68,17 @@ class Fragment_CreateExam : Fragment() {
                 mutableListOf()
         )
 
-        LoadSubjectNames(mSubjectViewModel).execute()
-
         mSubject.adapter = mLessonSubjectAdapter
+
+        mSubjectViewModel.subjectNamesList.observe(this, Observer {
+            if(it != null) {
+                mSubjects = it
+                mLessonSubjectAdapter.clear()
+                mLessonSubjectAdapter.addAll(mSubjects)
+            }
+        })
+
+
 
         return rootView
     }
@@ -97,20 +107,5 @@ class Fragment_CreateExam : Fragment() {
 
     @OnClick(R.id.createexam_date_btn)
     fun showDatePicker() = Fragment_DatePicker().show(activity.fragmentManager, "datePicker")
-
-    //Used to load a list of lesson subjects as strings in an async way and then add them to an
-    //adapter
-    class LoadSubjectNames(private val subjectViewModel: SubjectViewModel) : AsyncTask<String, Int, List<String>>() {
-
-        override fun doInBackground(vararg params: String?): List<String>
-                = subjectViewModel.loadSubjectNames()
-
-        override fun onPostExecute(result: List<String>?) {
-            if(result != null) {
-                mLessonSubjectAdapter.clear()
-                for (subject in result) mLessonSubjectAdapter.add(subject)
-            }
-        }
-    }
 
 }
