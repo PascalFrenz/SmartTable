@@ -13,29 +13,28 @@ import org.thecoders.smarttable.TimeHelper
 class Dialog_TimePreference(ctxt: Context, attrs: AttributeSet) : DialogPreference(ctxt, attrs) {
     private var lastHour = 0
     private var lastMinute = 0
-    private var picker: TimePicker? = null
+    private lateinit var picker: TimePicker
 
     init {
-
         positiveButtonText = "Set"
         negativeButtonText = "Cancel"
     }
 
     override fun onCreateDialogView(): View {
         picker = TimePicker(context)
-        picker?.setIs24HourView(true)
-        return picker as TimePicker
+        picker.setIs24HourView(true)
+        return picker
     }
 
     override fun onBindDialogView(v: View) {
         super.onBindDialogView(v)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            picker?.hour = lastHour
-            picker?.minute = lastMinute
+            picker.hour = lastHour
+            picker.minute = lastMinute
         } else {
-            picker?.currentHour = lastHour
-            picker?.currentMinute = lastMinute
+            picker.currentHour = lastHour
+            picker.currentMinute = lastMinute
         }
     }
 
@@ -44,11 +43,11 @@ class Dialog_TimePreference(ctxt: Context, attrs: AttributeSet) : DialogPreferen
 
         if (positiveResult) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                lastHour = picker!!.hour
-                lastMinute = picker!!.minute
+                lastHour = picker.hour
+                lastMinute = picker.minute
             } else {
-                lastHour = picker!!.currentHour
-                lastMinute = picker!!.currentMinute
+                lastHour = picker.currentHour
+                lastMinute = picker.currentMinute
             }
 
             val sb = StringBuilder()
@@ -82,32 +81,7 @@ class Dialog_TimePreference(ctxt: Context, attrs: AttributeSet) : DialogPreferen
             defaultValue!!.toString()
         }
 
-        lastHour = TimeHelper().getHours(time).toInt()
-        lastMinute = TimeHelper().getMinutes(time).toInt()
-    }
-
-    companion object {
-
-        fun getHour(time: String): Int {
-            val pieces = time.split(":")
-            val hour: Int
-
-            hour =
-                    if (pieces[0][0].toString() == "0") pieces[0][1].toInt()
-                    else pieces[0].toInt()
-
-            return hour
-        }
-
-        fun getMinute(time: String): Int {
-            val pieces = time.split(":")
-            val minute: Int
-
-            minute =
-                    if (pieces[1][0].toString() == "0") pieces[1][1].toInt()
-                    else pieces[1].toInt()
-
-            return minute
-        }
+        lastHour = TimeHelper.getHours(time).toInt()
+        lastMinute = TimeHelper.getMinutes(time).toInt()
     }
 }
