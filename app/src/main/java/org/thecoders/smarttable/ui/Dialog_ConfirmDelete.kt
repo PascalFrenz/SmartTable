@@ -87,8 +87,8 @@ class Dialog_ConfirmDelete : DialogFragment() {
                                 else Toast.makeText(context, "Something went wrong!", Toast.LENGTH_LONG).show()
                                 //TODO: Extend this until every day is covered!
                             }
-                            lessonAdapter.remove(lessonToDelete)
-                            lessonAdapter.notifyDataSetChanged()
+                            lessonAdapter.data.remove(lessonToDelete)
+                            lessonAdapter.notifyItemRemoved(lessonToDelete.id.toInt())
                             dialog.dismiss()
                         }
                         .setNegativeButton(R.string.action_cancel) { dialog, _ ->
