@@ -1,26 +1,31 @@
 package org.thecoders.smarttable.ui
 
 
+import android.arch.lifecycle.LifecycleFragment
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ListView
 import butterknife.*
 import org.thecoders.smarttable.R
+import org.thecoders.smarttable.data.Lesson
 import org.thecoders.smarttable.viewmodel.LessonViewModel
 
 
 /**
- * A simple [Fragment] subclass.
+ *
  */
-class Fragment_Timetable : Fragment() {
 
-    @BindView(R.id.timetable_listview) lateinit var mListView: ListView
+class Fragment_Timetable : LifecycleFragment() {
+
+    @BindView(R.id.timetable_listview) lateinit var mLessonListView: RecyclerView
 
     @BindView(R.id.timetable_mon) lateinit var btn_mon: Button
     @BindView(R.id.timetable_tue) lateinit var btn_tue: Button
@@ -31,9 +36,11 @@ class Fragment_Timetable : Fragment() {
 
 
     private lateinit var mViewModel: LessonViewModel
+    private lateinit var mLessonAdapter: Adapter_Lesson
+
+    private lateinit var mondayLessons: MutableList<Lesson>
 
     companion object {
-        private lateinit var mLessonAdapter: Adapter_Lesson
         private lateinit var unbinder: Unbinder
     }
 
@@ -49,14 +56,21 @@ class Fragment_Timetable : Fragment() {
 
         unbinder = ButterKnife.bind(this, rootView)
 
-        mLessonAdapter = Adapter_Lesson(
-                context = activity,
-                layoutResourceId = R.layout.listview_item_lesson,
-                data = mutableListOf(),
-                enableEdit = true
-        )
+        mLessonAdapter = Adapter_Lesson(activity, mutableListOf(),false)
 
-        mListView.adapter = mLessonAdapter
+        mViewModel.mondayLessons.observe(this, Observer {
+            if (it != null) {
+                mondayLessons = (it.filter { it.mon != "NULL" }).toMutableList()
+            }
+        })
+
+        val buttonbarLayoutManager = LinearLayoutManager(context)
+        buttonbarLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        val dividerItemDecoration = DividerItemDecoration(context, buttonbarLayoutManager.orientation)
+
+        mLessonListView.layoutManager = buttonbarLayoutManager
+        mLessonListView.addItemDecoration(dividerItemDecoration)
+        mLessonListView.adapter = mLessonAdapter
 
         return rootView
     }
@@ -68,7 +82,7 @@ class Fragment_Timetable : Fragment() {
 
     @OnClick(R.id.timetable_mon)
     fun onClickMon() {
-        LessonViewModel.Companion.LoadLessonsIntoAdapter(mLessonAdapter, "monday", mViewModel)
+        mLessonAdapter.alterItems(mondayLessons)
     }
 
     @OnLongClick(R.id.timetable_mon)
