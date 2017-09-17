@@ -2,6 +2,7 @@ package org.thecoders.smarttable.viewmodel
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import org.thecoders.smarttable.SmartTableApplication
 import org.thecoders.smarttable.data.AppDatabase
@@ -16,13 +17,15 @@ class SubjectViewModel(application: Application) : AndroidViewModel(application)
 
     @Inject lateinit var db: AppDatabase
 
+    val subjectList: LiveData<List<Subject>>
+    val subjectNamesList: LiveData<List<String>>
+
+
     init {
         (application as SmartTableApplication).appComponent.inject(this)
+        subjectList = db.subjectModel().loadSubjects()
+        subjectNamesList = db.subjectModel().loadSubjectNames()
     }
-
-    fun loadSubjectList() = db.subjectModel().loadSubjects()
-
-    fun loadSubjectNames() = db.subjectModel().loadSubjectNames()
 
     fun addSubject(subject: Subject) =
             AsyncTask.execute {

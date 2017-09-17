@@ -2,11 +2,11 @@ package org.thecoders.smarttable.viewmodel
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import android.util.Log
 import org.thecoders.smarttable.SmartTableApplication
 import org.thecoders.smarttable.data.*
-import org.thecoders.smarttable.ui.Adapter_Lesson
 import javax.inject.Inject
 
 /**
@@ -16,16 +16,20 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
 
 
     @Inject lateinit var db: AppDatabase
+    val mondayLessons: LiveData<List<LessonMon>>
+    val tuesdayLessons: LiveData<List<LessonTue>>
+    val wednesdayLessons: LiveData<List<LessonWed>>
+    val thursdayLessons: LiveData<List<LessonThu>>
+    val fridayLessons: LiveData<List<LessonFri>>
 
     init {
         (application as SmartTableApplication).appComponent.inject(this)
+        mondayLessons = db.timetableModel().loadMondayLessons()
+        tuesdayLessons = db.timetableModel().loadTuesdayLessons()
+        wednesdayLessons = db.timetableModel().loadWednesdayLessons()
+        thursdayLessons = db.timetableModel().loadThursdayLessons()
+        fridayLessons = db.timetableModel().loadFridayLessons()
     }
-
-    fun loadMondayLessons() = db.timetableModel().loadMondayLessons()
-    fun loadTuesdayLessons() = db.timetableModel().loadTuesdayLessons()
-    fun loadWednesdayLessons() = db.timetableModel().loadWednesdayLessons()
-    fun loadThursdayLessons() = db.timetableModel().loadThursdayLessons()
-    fun loadFridayLessons() = db.timetableModel().loadFridayLessons()
 
     private fun updateMondayLesson(lesson: LessonMon) = db.timetableModel().updateMondayLesson(id = lesson.id, mon_timing = lesson.mon_timing, mon = lesson.mon)
     private fun updateTuesdayLesson(lesson: LessonTue) = db.timetableModel().updateTuesdayLesson(id = lesson.id, tue_timing = lesson.tue_timing, tue = lesson.tue)
@@ -37,8 +41,8 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
 
     fun insertOrUpdateLesson(lesson: Lesson, day: String) {
         val lastLessonId: Int =
-                if(loadMondayLessons().lastIndex == -1) 0
-                else loadMondayLessons().lastIndex + 1
+                if(mondayLessons.value?.lastIndex == -1) 0 //TODO: Rework Null-Handling
+                else mondayLessons.value!!.lastIndex + 1
         Log.v(LOG_TAG, "LastLessonId: $lastLessonId\n" + lesson.toString() )
 
         when (day) {
@@ -81,49 +85,5 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
 
     companion object {
         private val LOG_TAG = LessonViewModel::class.java.simpleName
-
-        class LoadLessonsIntoAdapter(
-                val adapter: Adapter_Lesson,
-                private val day: String,
-                private val lessonViewModel: LessonViewModel
-        ) : AsyncTask<String, Int, List<Lesson>>() {
-
-            override fun doInBackground(vararg params: String?): List<Lesson> {
-                return when (day) {
-                    "monday" -> lessonViewModel.loadMondayLessons().filter { it.mon != "NULL" }
-                    "tuesday" -> lessonViewModel.loadTuesdayLessons()
-                    "wednesday" -> lessonViewModel.loadWednesdayLessons()
-                    "thursday" -> lessonViewModel.loadThursdayLessons()
-                    "friday" -> lessonViewModel.loadFridayLessons()
-                    else -> mutableListOf()
-                }
-            }
-
-            override fun onPostExecute(result: List<Lesson>) {
-                if(result.isNotEmpty()) {
-                    adapter.clear()
-                    result.forEach {
-                        adapter.add(it)
-                        Log.v(LOG_TAG, it.toString())
-                    }
-                }
-            }
-        }
-
-        class LoadLessonsByDay(
-                private val day: String,
-                private val lessonViewModel: LessonViewModel
-        ) : AsyncTask<String, Int, List<Lesson>>() {
-            override fun doInBackground(vararg params: String?): List<Lesson> {
-                return when (day) {
-                    "monday" -> lessonViewModel.loadMondayLessons().filter { it.mon != "NULL" }
-                    "tuesday" -> lessonViewModel.loadTuesdayLessons()
-                    "wednesday" -> lessonViewModel.loadWednesdayLessons()
-                    "thursday" -> lessonViewModel.loadThursdayLessons()
-                    "friday" -> lessonViewModel.loadFridayLessons()
-                    else -> mutableListOf()
-                }
-            }
-        }
     }
 }
