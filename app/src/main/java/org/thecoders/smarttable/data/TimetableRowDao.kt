@@ -1,5 +1,6 @@
 package org.thecoders.smarttable.data
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
@@ -12,25 +13,25 @@ import android.arch.persistence.room.Query
 @Dao
 interface TimetableRowDao {
     @Query("select id, mon_timing, mon from timetable")
-    fun loadMondayLessons(): List<LessonMon>
+    fun loadMondayLessons(): LiveData<List<LessonMon>>
 
     @Query("select id, tue_timing, tue from timetable")
-    fun loadTuesdayLessons(): List<LessonTue>
+    fun loadTuesdayLessons(): LiveData<List<LessonTue>>
 
     @Query("select id, wed_timing, wed from timetable")
-    fun loadWednesdayLessons(): List<LessonWed>
+    fun loadWednesdayLessons(): LiveData<List<LessonWed>>
 
     @Query("select id, thu_timing, thu from timetable")
-    fun loadThursdayLessons(): List<LessonThu>
+    fun loadThursdayLessons(): LiveData<List<LessonThu>>
 
     @Query("select id, fri_timing, fri from timetable")
-    fun loadFridayLessons(): List<LessonFri>
+    fun loadFridayLessons(): LiveData<List<LessonFri>>
 
     @Query("select * from timetable where id = :id")
     fun loadLessonRowById(id: Long): TimetableRow
 
     @Query("select * from timetable")
-    fun loadTimetable(): List<TimetableRow>
+    fun loadTimetable(): LiveData<List<TimetableRow>>
 
     @Query("update timetable set mon_timing = :mon_timing, mon = :mon where id = :id")
     fun updateMondayLesson(id: Long, mon_timing: String, mon: String)

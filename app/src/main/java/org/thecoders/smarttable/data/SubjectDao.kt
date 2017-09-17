@@ -1,5 +1,6 @@
 package org.thecoders.smarttable.data
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 
 /**
@@ -10,13 +11,13 @@ import android.arch.persistence.room.*
 interface SubjectDao {
 
     @Query("select * from subjects")
-    fun loadSubjects(): List<Subject>
+    fun loadSubjects(): LiveData<List<Subject>>
 
     @Query("select * from subjects where id = :id")
     fun loadSubjectById(id: Long): Subject
 
     @Query("select name from subjects")
-    fun loadSubjectNames(): List<String>
+    fun loadSubjectNames(): LiveData<List<String>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdate(subject: Subject)
