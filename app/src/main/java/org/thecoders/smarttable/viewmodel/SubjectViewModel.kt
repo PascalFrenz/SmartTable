@@ -6,7 +6,7 @@ import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import org.thecoders.smarttable.SmartTableApplication
 import org.thecoders.smarttable.data.AppDatabase
-import org.thecoders.smarttable.data.Subject
+import org.thecoders.smarttable.data.pojos.Subject
 import javax.inject.Inject
 
 /**

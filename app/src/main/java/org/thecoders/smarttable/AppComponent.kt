@@ -1,7 +1,6 @@
 package org.thecoders.smarttable
 
 import dagger.Component
-import org.thecoders.smarttable.data.DataModule
 import org.thecoders.smarttable.viewmodel.ExamViewModel
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
 import org.thecoders.smarttable.viewmodel.LessonViewModel

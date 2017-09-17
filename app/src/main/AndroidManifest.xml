@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.Activity_CreateHomework"
+            android:name=".ui.activities.Activity_CreateHomework"
             android:label="New Homework"
             android:parentActivityName=".Activity_Main"
             android:theme="@style/AppTheme"
@@ -34,7 +34,7 @@
                 android:value=".Activity_Main" />
         </activity>
         <activity
-            android:name=".ui.Activity_CreateSubject"
+            android:name=".ui.activities.Activity_CreateSubject"
             android:label="New Subject"
             android:parentActivityName=".Activity_Main"
             android:theme="@style/AppTheme"
@@ -45,7 +45,7 @@
                 android:value=".Activity_Main" />
         </activity>
         <activity
-            android:name=".ui.Activity_CreateExam"
+            android:name=".ui.activities.Activity_CreateExam"
             android:label="New Exam"
             android:parentActivityName=".Activity_Main"
             android:theme="@style/AppTheme"
@@ -55,7 +55,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activity_Main" />
         </activity>
-        <activity android:name=".ui.Activity_ModifyDay"
+        <activity android:name=".ui.activities.Activity_ModifyDay"
             android:label="Modify Day"
             android:parentActivityName=".Activity_Main"
             android:theme="@style/AppTheme"
@@ -66,7 +66,7 @@
                 android:value=".Activity_Main" />
         </activity>
         <activity
-            android:name=".ui.Activity_Settings"
+            android:name=".ui.activities.Activity_Settings"
             android:label="Settings"
             android:parentActivityName=".Activity_Main"
             android:theme="@style/AppTheme"

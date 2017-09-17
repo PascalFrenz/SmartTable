@@ -8,6 +8,14 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import org.thecoders.smarttable.data.daos.ExamDao
+import org.thecoders.smarttable.data.daos.HomeworkDao
+import org.thecoders.smarttable.data.daos.SubjectDao
+import org.thecoders.smarttable.data.daos.TimetableRowDao
+import org.thecoders.smarttable.data.pojos.Exam
+import org.thecoders.smarttable.data.pojos.Homework
+import org.thecoders.smarttable.data.pojos.Subject
+import org.thecoders.smarttable.data.pojos.TimetableRow
 
 @Database(
         entities = arrayOf(Homework::class, Exam::class, Subject::class, TimetableRow::class),

@@ -5,7 +5,7 @@ import android.arch.lifecycle.AndroidViewModel
 import android.os.AsyncTask
 import org.thecoders.smarttable.SmartTableApplication
 import org.thecoders.smarttable.data.AppDatabase
-import org.thecoders.smarttable.data.Homework
+import org.thecoders.smarttable.data.pojos.Homework
 import javax.inject.Inject
 
 /**

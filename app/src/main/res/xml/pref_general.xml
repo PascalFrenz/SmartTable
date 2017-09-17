@@ -5,11 +5,11 @@
         android:title="Timetable"
         android:key="pref_cat_timetable">
 
-        <org.thecoders.smarttable.ui.Dialog_TimePreference
+        <org.thecoders.smarttable.ui.dialogs.Dialog_TimePreference
             android:key="pref_day_start"
             android:title="Start of the school day"/>
 
-        <org.thecoders.smarttable.ui.Dialog_TimePreference
+        <org.thecoders.smarttable.ui.dialogs.Dialog_TimePreference
             android:key="pref_lesson_length"
             android:title="Length of a lesson" />
 

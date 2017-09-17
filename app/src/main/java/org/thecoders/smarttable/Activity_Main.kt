@@ -15,10 +15,10 @@ import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import org.thecoders.smarttable.data.AppDatabase
-import org.thecoders.smarttable.ui.Activity_Settings
-import org.thecoders.smarttable.ui.Fragment_Examlist
-import org.thecoders.smarttable.ui.Fragment_Homeworklist
-import org.thecoders.smarttable.ui.Fragment_Timetable
+import org.thecoders.smarttable.ui.activities.Activity_Settings
+import org.thecoders.smarttable.ui.fragments.Fragment_Examlist
+import org.thecoders.smarttable.ui.fragments.Fragment_Homeworklist
+import org.thecoders.smarttable.ui.fragments.Fragment_Timetable
 
 class Activity_Main : AppCompatActivity() {
 
@@ -91,14 +91,14 @@ class Activity_Main : AppCompatActivity() {
                                         .shareFab(null)
 
                                 (activity_main_viewpager.adapter
-                                        .instantiateItem(activity_main_viewpager, 2) as org.thecoders.smarttable.ui.Fragment_Homeworklist)
+                                        .instantiateItem(activity_main_viewpager, 2) as Fragment_Homeworklist)
                                         .shareFab(null)
 
                                 if(mSharedFab?.isShown as Boolean) mSharedFab?.hide()
                             }
                             2 -> {
                                 (activity_main_viewpager.adapter
-                                        .instantiateItem(activity_main_viewpager, 2) as org.thecoders.smarttable.ui.Fragment_Homeworklist)
+                                        .instantiateItem(activity_main_viewpager, 2) as Fragment_Homeworklist)
                                         .shareFab(mSharedFab)
                                 mSharedFab?.show()
                             }
