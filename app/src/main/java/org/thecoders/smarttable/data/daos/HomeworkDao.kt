@@ -1,5 +1,6 @@
 package org.thecoders.smarttable.data.daos
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import org.thecoders.smarttable.data.pojos.Homework
 
@@ -10,7 +11,7 @@ import org.thecoders.smarttable.data.pojos.Homework
 @Dao
 interface HomeworkDao {
     @Query("select * from homework")
-    fun loadHomework(): List<Homework>
+    fun loadHomework(): LiveData<List<Homework>>
 
     @Query("select * from homework where id = :id")
     fun loadHomeworkById(id: Long): Homework

@@ -3,13 +3,13 @@ package org.thecoders.smarttable.ui.adapters
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.listview_item_homework.view.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Homework
@@ -34,40 +34,64 @@ import java.util.*
  * constructor.
 
  */
-class Adapter_Homework(context: Context, val layoutRecourceId: Int,
-                       var data: MutableList<Homework>, val enableEdit: Boolean) :
-        ArrayAdapter<Homework>(context, layoutRecourceId, data) {
+class Adapter_Homework(val context: Context, var data: MutableList<Homework>, val enableEdit: Boolean) :
+        RecyclerView.Adapter<Adapter_Homework.HomeworkViewHolder>() {
 
-    private class HomeworkHolder {
-        lateinit var mSubject: TextView
-        lateinit var mTask: TextView
-        lateinit var mFinishDate: TextView
-        lateinit var mDeleteIcon: ImageView
+    companion object {
+        private val LOG_TAG = Adapter_Homework::class.java.simpleName
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var row = convertView
-        val holder: HomeworkHolder
+    inner class HomeworkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(position: Int) {
+            val mSubject: TextView = itemView.findViewById(R.id.item_homework_subject)
+            val mTask: TextView = itemView.findViewById(R.id.item_homework_task)
+            val mDeadline: TextView = itemView.findViewById(R.id.item_homework_deadline)
+            val mDeleteIcon: ImageView = itemView.findViewById(R.id.item_homework_delete)
 
-        if (row == null) {
-            val inflater = (context as AppCompatActivity).layoutInflater
+            val homework = data[position]
 
-            row = inflater.inflate(layoutRecourceId, parent, false)
-            holder = HomeworkHolder()
+            val today = DateConverter.dateFormat.format(Date())
+            val deadline = DateConverter.dateFormat.format(homework.date_deadline)
 
-            initHolder(holder, row)
-            row.tag = holder
+            val timeToDeadline = DateConverter().getDifference(today, deadline)
 
-        } else {
-            holder = row.tag as HomeworkHolder
+            when {
+                homework.finished -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.done))
+                timeToDeadline <= 1 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority4))
+                timeToDeadline <= 3 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority3))
+                timeToDeadline <= 7 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority2))
+                timeToDeadline <= 14 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority1))
+                else -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority0))
+            }
+
+            Log.v(LOG_TAG, homework.toString())
+
+            mSubject.text = "${homework.subject}: "
+            mTask.text = "${homework.task} (${homework.effort})"
+            mDeadline.text = "$timeToDeadline days left ($deadline)"
+
+            if (enableEdit) {
+                mDeleteIcon.setOnClickListener { displayDeleteDialog(homework, context) }
+            } else {
+                mDeleteIcon.isClickable = false
+                mDeleteIcon.visibility = View.INVISIBLE
+            }
         }
-
-        val homework = data[position]
-
-        setupHolder(holder, homework, row!!)
-
-        return row
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeworkViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(
+                R.layout.listview_item_homework,
+                parent,
+                false
+        )
+
+        return HomeworkViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: HomeworkViewHolder, position: Int) = holder.bind(position)
+
+    override fun getItemCount(): Int = data.count()
 
 
     private fun displayDeleteDialog(homework: Homework, context: Context) {
@@ -77,45 +101,8 @@ class Adapter_Homework(context: Context, val layoutRecourceId: Int,
         confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)
     }
 
-
-    private fun initHolder(holder: HomeworkHolder, row: View) {
-        holder.mSubject = row.item_homework_subject
-        holder.mTask = row.item_homework_task
-        holder.mFinishDate = row.item_homework_deadline
-        holder.mDeleteIcon = row.item_homework_delete
+    fun alterItems(newList: List<Homework>) {
+        data = newList.toMutableList()
+        notifyDataSetChanged()
     }
-
-    private fun setupHolder(holder: HomeworkHolder, homework: Homework, row: View) {
-        val today = DateConverter.dateFormat.format(Date())
-        val deadline = DateConverter.dateFormat.format(homework.date_deadline)
-
-        val timeToDeadline = DateConverter().getDifference(today, deadline)
-
-        when {
-            homework.finished -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.done))
-            timeToDeadline <= 1 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority4))
-            timeToDeadline <= 3 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority3))
-            timeToDeadline <= 7 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority2))
-            timeToDeadline <= 14 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority1))
-            else -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority0))
-        }
-
-        Log.v(LOG_TAG, homework.toString())
-
-        holder.mSubject.text = "${homework.subject}: "
-        holder.mTask.text = "${homework.task} (${homework.effort})"
-        holder.mFinishDate.text = "$timeToDeadline days left ($deadline)"
-
-        if (enableEdit) {
-            holder.mDeleteIcon.setOnClickListener { displayDeleteDialog(homework, context) }
-        } else {
-            holder.mDeleteIcon.isClickable = false
-            holder.mDeleteIcon.visibility = View.INVISIBLE
-        }
-    }
-
-    companion object {
-        private val LOG_TAG = Adapter_Homework::class.java.simpleName
-    }
-
 }

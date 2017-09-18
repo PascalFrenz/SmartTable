@@ -2,6 +2,7 @@ package org.thecoders.smarttable.viewmodel
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import org.thecoders.smarttable.SmartTableApplication
 import org.thecoders.smarttable.data.AppDatabase
@@ -14,12 +15,12 @@ import javax.inject.Inject
 class ExamViewModel(application: Application) : AndroidViewModel(application) {
 
     @Inject lateinit var db: AppDatabase
+    val examList: LiveData<List<Exam>>
 
     init {
         (application as SmartTableApplication).appComponent.inject(this)
+        examList = db.examModel().loadExams()
     }
-
-    fun loadExamList() = db.examModel().loadExams()
 
     fun addExam(exam: Exam) =
             AsyncTask.execute {

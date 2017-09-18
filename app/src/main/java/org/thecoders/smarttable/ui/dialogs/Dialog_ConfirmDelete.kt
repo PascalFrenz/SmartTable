@@ -5,7 +5,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.AppDatabase
@@ -25,7 +24,7 @@ import org.thecoders.smarttable.ui.adapters.Adapter_Subject
 class Dialog_ConfirmDelete : DialogFragment() {
 
     var objectToDelete: Any? = null
-    var objectAdapter: ArrayAdapter<*>? = null
+    var objectAdapter: Any? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
@@ -38,14 +37,14 @@ class Dialog_ConfirmDelete : DialogFragment() {
                 builder.setMessage(R.string.title_confirm_delete_dialog)
                         .setPositiveButton(R.string.action_delete) { dialog, _ ->
                             AsyncTask.execute {
-                                db.homeworkModel().delete(homeworkToDelete)     // Delete database entry
+                                db.homeworkModel().delete(homeworkToDelete)
                             }
-                            homeworkAdapter.remove(homeworkToDelete)            // Update Adapter
-                            homeworkAdapter.notifyDataSetChanged()              // Update the ListView
-                            dialog.dismiss()                                    // Dismiss the Dialog
+                            homeworkAdapter.data.remove(homeworkToDelete)
+                            homeworkAdapter.notifyItemRemoved(homeworkAdapter.data.indexOf(homeworkToDelete))
+                            dialog.dismiss()
                         }
                         .setNegativeButton(R.string.action_cancel) { dialog, _ ->
-                            dialog.dismiss()                                    // dismiss dialog
+                            dialog.dismiss()
                         }
 
             }
@@ -57,8 +56,8 @@ class Dialog_ConfirmDelete : DialogFragment() {
                             AsyncTask.execute {
                                 db.examModel().delete(examToDelete)
                             }
-                            examAdapter.remove(examToDelete)
-                            examAdapter.notifyDataSetChanged()
+                            examAdapter.data.remove(examToDelete)
+                            examAdapter.notifyItemRemoved(examAdapter.data.indexOf(examToDelete))
                             dialog.dismiss()
                         }
                         .setNegativeButton(R.string.action_cancel) { dialog, _ ->
@@ -73,8 +72,8 @@ class Dialog_ConfirmDelete : DialogFragment() {
                             AsyncTask.execute {
                                 db.subjectModel().delete(subjectToDelete)
                             }
-                            subjectAdapter.remove(subjectToDelete)
-                            subjectAdapter.notifyDataSetChanged()
+                            subjectAdapter.data.remove(subjectToDelete)
+                            subjectAdapter.notifyItemRemoved(subjectAdapter.data.indexOf(subjectToDelete))
                             dialog.dismiss()
                         }
                         .setNegativeButton(R.string.action_cancel) { dialog, _ ->

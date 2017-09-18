@@ -3,12 +3,12 @@ package org.thecoders.smarttable.ui.adapters
 import android.content.Context
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.listview_item_exam.view.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
@@ -19,73 +19,66 @@ import java.util.*
  * Created by frenz on 24.06.2017.
  */
 
-class Adapter_Exam(context: Context, val layoutResourceId: Int,
-                   val data: MutableList<Exam>, val enableEdit: Boolean) :
-        ArrayAdapter<Exam>(context, layoutResourceId, data) {
+class Adapter_Exam(val context: Context, var data: MutableList<Exam>, val enableEdit: Boolean) :
+        RecyclerView.Adapter<Adapter_Exam.ExamViewHolder>() {
 
-    class ExamHolder {
-        lateinit var mSubject: TextView
-        lateinit var mTopic: TextView
-        lateinit var mDate: TextView
-        lateinit var mDeleteIcon: ImageView
+    companion object {
+        private val LOG_TAG = Adapter_Exam::class.java.simpleName
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var row = convertView
-        val holder: ExamHolder
+    inner class ExamViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(position: Int) {
+            //Init the views inside the itemView
+            val mSubject: TextView = itemView.findViewById(R.id.item_exam_subject)
+            val mTopic: TextView = itemView.findViewById(R.id.item_exam_topic)
+            val mDate: TextView = itemView.findViewById(R.id.item_exam_date)
+            val mDeleteIcon: ImageView  = itemView.findViewById(R.id.item_exam_delete)
 
-        if(row == null) {
-            val inflater = (context as AppCompatActivity).layoutInflater
+            //Fetch the item from the data
+            val exam = data[position]
 
-            row = inflater.inflate(layoutResourceId, parent, false)!!
-            holder = ExamHolder()
+            //Setup all the fields according to the items data
+            val today = DateConverter.dateFormat.format(Date())
+            val examDate = DateConverter.dateFormat.format(exam.date)
 
-            initHolder(holder, row)
-            row.tag = holder
+            val timeToExam = DateConverter().getDifference(today, examDate)
 
-        } else {
-            holder = row.tag as ExamHolder
+            when {
+                timeToExam <= 1 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority4))
+                timeToExam <= 3 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority3))
+                timeToExam <= 7 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority2))
+                timeToExam <= 14 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority1))
+                else -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority0))
+            }
+
+            mSubject.text = "${exam.subject}: "
+            mTopic.text = exam.topic
+            mDate.text = "$timeToExam days left ($examDate)"
+
+            if (enableEdit) {
+                mDeleteIcon.setOnClickListener { displayDeleteDialog(exam, context) }
+            } else {
+                mDeleteIcon.isClickable = false
+                mDeleteIcon.visibility = View.INVISIBLE
+            }
         }
 
-        val exam = data[position]
-
-        setupHolder(holder, exam, row)
-
-        return row
     }
 
-    private fun initHolder(holder: ExamHolder, row: View) {
-        holder.mSubject = row.item_exam_subject
-        holder.mTopic = row.item_exam_topic
-        holder.mDate = row.item_exam_date
-        holder.mDeleteIcon = row.item_exam_delete
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExamViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(
+                R.layout.listview_item_exam,
+                parent,
+                false
+        )
+
+        return ExamViewHolder(itemView)
     }
 
-    private fun setupHolder(holder: ExamHolder, exam: Exam, row: View) {
-        val today = DateConverter.dateFormat.format(Date())
-        val examDate = DateConverter.dateFormat.format(exam.date)
+    override fun onBindViewHolder(holder: ExamViewHolder, position: Int) = holder.bind(position)
 
-        val timeToExam = DateConverter().getDifference(today, examDate)
+    override fun getItemCount(): Int = data.count()
 
-        when {
-            timeToExam <= 1 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority4))
-            timeToExam <= 3 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority3))
-            timeToExam <= 7 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority2))
-            timeToExam <= 14 -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority1))
-            else -> row.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority0))
-        }
-
-        holder.mSubject.text = "${exam.subject}: "
-        holder.mTopic.text = exam.topic
-        holder.mDate.text = "$timeToExam days left ($examDate)"
-
-        if (enableEdit) {
-            holder.mDeleteIcon.setOnClickListener { displayDeleteDialog(exam, context) }
-        } else {
-            holder.mDeleteIcon.isClickable = false
-            holder.mDeleteIcon.visibility = View.INVISIBLE
-        }
-    }
 
     private fun displayDeleteDialog(exam: Exam, context: Context) {
         val confirmDeleteDialog = Dialog_ConfirmDelete()
@@ -94,8 +87,8 @@ class Adapter_Exam(context: Context, val layoutResourceId: Int,
         confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)
     }
 
-    companion object {
-        private val LOG_TAG = Adapter_Exam::class.java.simpleName
+    fun alterItems(newList: List<Exam>) {
+        data = newList.toMutableList()
+        notifyDataSetChanged()
     }
-
 }

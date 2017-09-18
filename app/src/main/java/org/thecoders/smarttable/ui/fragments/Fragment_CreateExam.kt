@@ -89,15 +89,17 @@ class Fragment_CreateExam : LifecycleFragment() {
         if(mTopic.text.toString() == "" || mDate.text.toString()  == "") {
 
             Toast.makeText(context, "Please fill out all fields", Toast.LENGTH_SHORT).show()
-
         } else {
             val df = DateConverter.dateFormat
-            mCallback.onAddExamRequested(Exam(
-                    0,
-                    mSubject.selectedItem.toString().trim(),
-                    mTopic.text.toString().trim(),
-                    df.parse(mDate.text.toString().trim())
-            ))
+
+            val newExam = Exam(
+                    id = 0,
+                    subject = mSubject.selectedItem.toString().trim(),
+                    topic = mTopic.text.toString().trim(),
+                    date = df.parse(mDate.text.toString().trim())
+            )
+
+            mCallback.onAddExamRequested(newExam)
         }
     }
 

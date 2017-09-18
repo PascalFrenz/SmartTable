@@ -1,21 +1,26 @@
 package org.thecoders.smarttable.ui.fragments
 
 
+import android.arch.lifecycle.LifecycleFragment
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import butterknife.BindView
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_examlist.view.*
-
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.data.pojos.Exam
 import org.thecoders.smarttable.ui.activities.Activity_CreateExam
 import org.thecoders.smarttable.ui.adapters.Adapter_Exam
 import org.thecoders.smarttable.viewmodel.ExamViewModel
@@ -24,14 +29,18 @@ import org.thecoders.smarttable.viewmodel.ExamViewModel
 /**
  * A simple [Fragment] subclass.
  */
-class Fragment_Examlist : Fragment() {
+class Fragment_Examlist : LifecycleFragment() {
 
     private lateinit var mExamViewModel: ExamViewModel
+    private lateinit var mExamAdapter: Adapter_Exam
     var mSharedFab: FloatingActionButton? = null
+
+    private lateinit var mUnbinder: Unbinder
+    @BindView(R.id.examlist_listview) lateinit var mExamListView: RecyclerView
+    @BindView(R.id.examlist_swiperefreshlayout) lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     companion object {
         private val LOG_TAG = Fragment_Examlist::class.java.simpleName
-        private lateinit var mExamAdapter: Adapter_Exam
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,22 +48,32 @@ class Fragment_Examlist : Fragment() {
         mExamViewModel = ViewModelProviders.of(this).get(ExamViewModel::class.java)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val rootView = inflater?.inflate(R.layout.fragment_examlist, container, false)!!
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val rootView = inflater.inflate(R.layout.fragment_examlist, container, false)
 
-        mExamAdapter = Adapter_Exam(
-                context = activity,
-                layoutResourceId = R.layout.listview_item_exam,
-                data = mutableListOf(),
-                enableEdit = true
-        )
+        mUnbinder = ButterKnife.bind(this, rootView)
 
-        LoadExamItems(mExamViewModel).execute()
+        //Create the Adapter
+        mExamAdapter = Adapter_Exam(activity, mutableListOf(), true)
 
-        rootView.examlist_listview.adapter = mExamAdapter
+        //Let the Adapter change upon change in the ViewModels data
+        mExamViewModel.examList.observe(this, Observer {
+            if (it != null) {
+                mExamAdapter.alterItems(it)
+            }
+        })
 
-        rootView.examlist_swiperefreshlayout.setOnRefreshListener {
+        //Set the ListViews adapter
+        mExamListView.adapter = mExamAdapter
+
+        //Set the ListViews LayoutManager
+        val layoutManager = LinearLayoutManager(context)
+        layoutManager.orientation = LinearLayoutManager.VERTICAL
+        mExamListView.layoutManager = layoutManager
+
+
+
+        mSwipeRefreshLayout.setOnRefreshListener {
             Toast.makeText(context, "Finished refreshing items",
                     Toast.LENGTH_SHORT).show()
             rootView.examlist_swiperefreshlayout.isRefreshing = false
@@ -66,6 +85,7 @@ class Fragment_Examlist : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         mSharedFab = null
+        mUnbinder.unbind()
     }
 
     fun shareFab(fab: FloatingActionButton?) {
@@ -81,17 +101,4 @@ class Fragment_Examlist : Fragment() {
             }
         }
     }
-
-    class LoadExamItems(private val examViewModel: ExamViewModel) : AsyncTask<String, Int, List<Exam>>() {
-        override fun doInBackground(vararg p0: String?): List<Exam>
-                = examViewModel.loadExamList()
-
-        override fun onPostExecute(result: List<Exam>?) {
-            if(result != null) {
-                mExamAdapter.clear()
-                for (exam in result) mExamAdapter.add(exam)
-            }
-        }
-    }
-
 }

@@ -2,9 +2,10 @@ package org.thecoders.smarttable.ui.adapters
 
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import org.thecoders.smarttable.R
@@ -15,68 +16,57 @@ import org.thecoders.smarttable.ui.dialogs.Dialog_ConfirmDelete
 /**
  * Created by frenz on 24.06.2017.
  */
-class Adapter_Subject(context: Context, private val layoutResourceId: Int,
-                      val data: List<Subject>, private val enableEdit: Boolean, private val dbEdit: Boolean) :
-        ArrayAdapter<Subject>(context, layoutResourceId, data) {
+class Adapter_Subject(val context: Context, var data: MutableList<Subject>, private val enableEdit: Boolean, private val dbEdit: Boolean) :
+        RecyclerView.Adapter<Adapter_Subject.SubjectViewHolder>() {
 
-    private class SubjectHolder {
-        lateinit var mName: TextView
-        lateinit var mTeacher: TextView
-        lateinit var mCategory: TextView
-        lateinit var mDeleteIcon: ImageView
+    companion object {
+        private val LOG_TAG = Adapter_Subject::class.java.simpleName
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var row = convertView
-        val holder: SubjectHolder
+    inner class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(position: Int) {
+            val mName: TextView = itemView.findViewById(R.id.item_subject_name)
+            val mTeacher: TextView = itemView.findViewById(R.id.item_subject_teacher)
+            val mCategory: TextView = itemView.findViewById(R.id.item_subject_category)
+            val mDeleteIcon: ImageView = itemView.findViewById(R.id.item_subject_delete)
 
-        if(row == null) {
-            val inflater = (context as AppCompatActivity).layoutInflater
+            val subject = data[position]
 
-            row = inflater.inflate(layoutResourceId, parent, false)
-            holder = SubjectHolder()
-
-            initHolder(holder, row)
-            row.tag = holder
-        } else {
-            holder = row.tag as SubjectHolder
-        }
-
-        val lesson = data[position]
-
-        setupHolder(holder, lesson, row!!)
-
-        return row
-    }
-
-    private fun initHolder(holder: SubjectHolder, row: View) {
-        holder.mName = row.findViewById(R.id.item_subject_name)
-        holder.mCategory = row.findViewById(R.id.item_subject_category)
-        holder.mDeleteIcon = row.findViewById(R.id.item_subject_delete)
-    }
-
-    private fun setupHolder(holder: SubjectHolder, subject: Subject?, row: View) {
-        if (subject != null) {
-            holder.mName.text = subject.name
-            holder.mTeacher.text = "(${subject.teacher})"
-            holder.mCategory.text = subject.category
+            mName.text = subject.name
+            mTeacher.text = "(${subject.teacher})"
+            mCategory.text = subject.category
             if (enableEdit) {
                 if (!dbEdit) {
-                    holder.mDeleteIcon.setOnClickListener {
-                        remove(subject)
-                        notifyDataSetChanged()
+                    mDeleteIcon.setOnClickListener {
+                        data.removeAt(position)
+                        notifyItemRemoved(position)
                     }
                 } else {
-                    holder.mDeleteIcon.setOnClickListener { displayDeleteDialog(subject, context) }
+                    mDeleteIcon.setOnClickListener { displayDeleteDialog(subject, context) }
                 }
             } else {
-                holder.mDeleteIcon.isClickable = false
-                holder.mDeleteIcon.visibility = View.INVISIBLE
+                mDeleteIcon.isClickable = false
+                mDeleteIcon.visibility = View.INVISIBLE
             }
 
-            row.setBackgroundColor(subject.color)
+            itemView.setBackgroundColor(subject.color)
         }
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(
+                R.layout.listview_item_subject,
+                parent,
+                false
+        )
+
+        return SubjectViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) = holder.bind(position)
+
+    override fun getItemCount(): Int = data.count()
+
 
     private fun displayDeleteDialog(subject: Subject, context: Context) {
         val confirmDeleteDialog = Dialog_ConfirmDelete()
@@ -85,7 +75,10 @@ class Adapter_Subject(context: Context, private val layoutResourceId: Int,
         confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)
     }
 
-    companion object {
-        private val LOG_TAG = Adapter_Subject::class.java.simpleName
+    fun alterItems(newList: List<Subject>) {
+        data = newList.toMutableList()
+        notifyDataSetChanged()
     }
+
+
 }

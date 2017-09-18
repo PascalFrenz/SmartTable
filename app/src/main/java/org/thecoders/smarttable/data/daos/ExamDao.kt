@@ -1,5 +1,6 @@
 package org.thecoders.smarttable.data.daos
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import org.thecoders.smarttable.data.pojos.Exam
 
@@ -11,7 +12,7 @@ import org.thecoders.smarttable.data.pojos.Exam
 interface ExamDao {
 
     @Query("select * from exam")
-    fun loadExams(): List<Exam>
+    fun loadExams(): LiveData<List<Exam>>
 
     @Query("select * from exam where id = :id")
     fun loadExamById(id: Long): Exam
