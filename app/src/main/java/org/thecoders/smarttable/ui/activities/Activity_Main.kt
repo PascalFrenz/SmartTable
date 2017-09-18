@@ -1,4 +1,4 @@
-package org.thecoders.smarttable
+package org.thecoders.smarttable.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,8 +14,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
+import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.AppDatabase
-import org.thecoders.smarttable.ui.activities.Activity_Settings
 import org.thecoders.smarttable.ui.fragments.Fragment_Examlist
 import org.thecoders.smarttable.ui.fragments.Fragment_Homeworklist
 import org.thecoders.smarttable.ui.fragments.Fragment_Timetable
@@ -41,6 +41,10 @@ class Activity_Main : AppCompatActivity() {
      * The [ViewPager] that will host the section contents.
      */
 
+    companion object {
+        private val LOG_TAG = Activity_Main::class.java.simpleName
+        private val STATE_PAGE_ID = "currentPageID"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -219,10 +223,5 @@ class Activity_Main : AppCompatActivity() {
                 else -> "Error"
             }
 
-    }
-
-    companion object {
-        private val LOG_TAG = Activity_Main::class.java.simpleName
-        private val STATE_PAGE_ID = "currentPageID"
     }
 }
