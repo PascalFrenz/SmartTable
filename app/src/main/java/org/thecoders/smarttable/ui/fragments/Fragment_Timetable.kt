@@ -16,7 +16,6 @@ import android.widget.Button
 import butterknife.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.pojos.Lesson
-import org.thecoders.smarttable.ui.activities.Activity_CreateSubject
 import org.thecoders.smarttable.ui.activities.Activity_ModifyDay
 import org.thecoders.smarttable.ui.adapters.Adapter_Lesson
 import org.thecoders.smarttable.viewmodel.LessonViewModel
@@ -28,8 +27,14 @@ import org.thecoders.smarttable.viewmodel.LessonViewModel
 
 class Fragment_Timetable : LifecycleFragment() {
 
-    @BindView(R.id.timetable_listview) lateinit var mLessonListView: RecyclerView
+    interface OnSubjectActionRequest {
+        fun onSubjectActionRequest()
+    }
 
+
+    private lateinit var unbinder: Unbinder
+
+    @BindView(R.id.timetable_listview) lateinit var mLessonListView: RecyclerView
     @BindView(R.id.timetable_mon) lateinit var btn_mon: Button
     @BindView(R.id.timetable_tue) lateinit var btn_tue: Button
     @BindView(R.id.timetable_wed) lateinit var btn_wed: Button
@@ -37,20 +42,24 @@ class Fragment_Timetable : LifecycleFragment() {
     @BindView(R.id.timetable_fri) lateinit var btn_fri: Button
     @BindView(R.id.timetable_more) lateinit var more: Button
 
+    private lateinit var mCallback: OnSubjectActionRequest
 
     private lateinit var mViewModel: LessonViewModel
     private lateinit var mLessonAdapter: Adapter_Lesson
 
+    //TODO: Add all days
     private lateinit var mondayLessons: MutableList<Lesson>
-
-    companion object {
-        private lateinit var unbinder: Unbinder
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mViewModel = ViewModelProviders.of(this).get(LessonViewModel::class.java)
+
+        mCallback =
+                try {
+                    activity as OnSubjectActionRequest
+                } catch (e: ClassCastException) {
+                    throw ClassCastException(activity.toString() + " must implement OnSubjectActionRequest")
+                }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -98,6 +107,6 @@ class Fragment_Timetable : LifecycleFragment() {
 
     @OnClick(R.id.timetable_more)
     fun onClickMore() {
-        startActivity(Intent(context, Activity_CreateSubject::class.java))
+        mCallback.onSubjectActionRequest()
     }
 }

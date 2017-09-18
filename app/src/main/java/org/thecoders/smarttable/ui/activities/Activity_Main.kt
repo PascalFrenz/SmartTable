@@ -16,11 +16,12 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.AppDatabase
+import org.thecoders.smarttable.ui.dialogs.Dialog_SubjectActions
 import org.thecoders.smarttable.ui.fragments.Fragment_Examlist
 import org.thecoders.smarttable.ui.fragments.Fragment_Homeworklist
 import org.thecoders.smarttable.ui.fragments.Fragment_Timetable
 
-class Activity_Main : AppCompatActivity() {
+class Activity_Main : AppCompatActivity(), Fragment_Timetable.OnSubjectActionRequest {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -196,6 +197,10 @@ class Activity_Main : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSubjectActionRequest() {
+        Dialog_SubjectActions.newInstance().show(fragmentManager, "SubjectActionsDialog")
     }
 
     /**
