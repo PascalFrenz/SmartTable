@@ -14,9 +14,9 @@ import org.thecoders.smarttable.R
  * Created by frenz on 14.09.2017.
  */
 class Adapter_SubjectButtonBar(var data: MutableList<String>)
-    : RecyclerView.Adapter<Adapter_SubjectButtonBar.SubjectViewHolder>() {
+    : RecyclerView.Adapter<Adapter_SubjectButtonBar.SubjectButtonViewHolder>() {
 
-    class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class SubjectButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(subjectName: String) {
             val mButton: Button = itemView.findViewById(R.id.item_subjectbutton_button)
             mButton.text = subjectName
@@ -40,14 +40,14 @@ class Adapter_SubjectButtonBar(var data: MutableList<String>)
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectButtonViewHolder {
         val button = LayoutInflater.from(parent.context)
                 .inflate(R.layout.listview_item_subject_button, parent, false)
 
-        return SubjectViewHolder(button)
+        return SubjectButtonViewHolder(button)
     }
 
-    override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SubjectButtonViewHolder, position: Int) {
         holder.bind(data[position])
     }
 

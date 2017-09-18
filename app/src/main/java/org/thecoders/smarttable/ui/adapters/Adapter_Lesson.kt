@@ -19,13 +19,13 @@ import java.util.*
  */
 
 class Adapter_Lesson(val context: Context, var data: MutableList<Lesson>, val enableEdit: Boolean) :
-        RecyclerView.Adapter<Adapter_Lesson.LessonHolder>(), LessonItemTouchHelperAdapter {
+        RecyclerView.Adapter<Adapter_Lesson.LessonViewHolder>(), LessonItemTouchHelperAdapter {
 
     companion object {
         private val LOG_TAG = Adapter_Lesson::class.java.simpleName
     }
 
-    inner class LessonHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LessonItemTouchHelperViewHolder {
+    inner class LessonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LessonItemTouchHelperViewHolder {
 
         fun bind(position: Int) {
             val lesson = data[position]
@@ -57,17 +57,17 @@ class Adapter_Lesson(val context: Context, var data: MutableList<Lesson>, val en
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LessonViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
                 R.layout.listview_item_lesson,
                 parent,
                 false
         )
 
-        return LessonHolder(itemView)
+        return LessonViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: LessonHolder, position: Int) {
+    override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
         holder.bind(position)
     }
 

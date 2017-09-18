@@ -60,8 +60,8 @@ class Fragment_ModifyDay : LifecycleFragment(), Activity_ModifyDay.SaveDayListen
         mDay = activity.intent.getStringExtra("day")
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater?.inflate(R.layout.fragment_modify_day, container, false) as View
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val rootView = inflater.inflate(R.layout.fragment_modify_day, container, false)
 
         mUnbinder = ButterKnife.bind(this, rootView)
 
