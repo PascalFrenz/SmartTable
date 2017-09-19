@@ -3,6 +3,7 @@ package org.thecoders.smarttable.ui.fragments
 import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -68,7 +69,8 @@ class Fragment_ModifyDay : LifecycleFragment(), Activity_ModifyDay.SaveDayListen
         mLessonAdapter = Adapter_Lesson(activity, mutableListOf(), true)
         mSubjectButtonAdapter = Adapter_SubjectButtonBar(data = mutableListOf())
 
-        initLessonListView()
+        //TODO: Use Dagger 2 to inject preferences
+        initLessonListView(PreferenceManager.getDefaultSharedPreferences(context))
         initButtonBar()
 
         setupViewModelObservers()
@@ -106,18 +108,12 @@ class Fragment_ModifyDay : LifecycleFragment(), Activity_ModifyDay.SaveDayListen
 
     }
 
-    private fun initLessonListView() {
-        val timetableLayoutManager = LinearLayoutManager(context)
-        timetableLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        val dividerItemDecoration = DividerItemDecoration(context, timetableLayoutManager.orientation)
+    private fun initLessonListView(preferences: SharedPreferences) {
 
-        mLessonListView.layoutManager = timetableLayoutManager
-        mLessonListView.addItemDecoration(dividerItemDecoration)
+        mLessonListView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        mLessonListView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         mLessonListView.adapter = mLessonAdapter
 
-
-        //TODO: Use Dagger 2 to inject preferences
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val startOfDay = preferences.getString(Fragment_Settings.ID_DAY_START, "")
         val lessonDuration = TimeHelper.getMinutes(preferences.getString(Fragment_Settings.ID_LESSON_LENGTH, ""))
 

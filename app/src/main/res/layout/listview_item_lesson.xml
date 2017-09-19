@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:paddingEnd="16dp"
     android:paddingStart="16dp">
 
     <TextView
         android:id="@+id/item_lesson_timespan"
-        style="@style/AppTheme.PrimaryText"
+        style="@style/AppTheme.SecondaryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/label_preview_timespan" />
@@ -25,28 +25,22 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:text="TextView"
         app:layout_constraintStart_toEndOf="@id/item_lesson_timespan"
-        app:layout_constraintTop_toTopOf="@+id/item_lesson_timespan"
+        app:layout_constraintBaseline_toBaselineOf="@id/item_lesson_timespan"
+        tools:layout_editor_absoluteY="16dp"
         tools:text="@string/label_preview_subject" />
 
-    <TextView
-        android:id="@+id/item_lesson_teacher"
-        style="@style/AppTheme.SecondaryText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/item_lesson_subject"
-        app:layout_constraintTop_toBottomOf="@id/item_lesson_subject"
-        tools:text="@string/label_preview_teacher" />
 
     <ImageView
         android:id="@+id/item_lesson_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:contentDescription="@string/content_description_delete_icon"
-        app:layout_constraintBottom_toBottomOf="@id/item_lesson_teacher"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/item_lesson_timespan"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_delete_24px" />
 
 </android.support.constraint.ConstraintLayout>
