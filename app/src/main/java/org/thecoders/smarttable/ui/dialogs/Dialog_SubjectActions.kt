@@ -13,6 +13,7 @@ import butterknife.OnClick
 import butterknife.Unbinder
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.ui.activities.Activity_CreateSubject
+import org.thecoders.smarttable.ui.activities.Activity_EditSubject
 
 /**
  * Created by frenz on 18.09.2017.
@@ -23,7 +24,6 @@ class Dialog_SubjectActions : DialogFragment() {
 
     @BindView(R.id.subjectactions_btn_new) lateinit var newSubject: Button
     @BindView(R.id.subjectactions_btn_edit) lateinit var editSubject: Button
-    @BindView(R.id.subjectactions_btn_delete) lateinit var deleteSubject: Button
 
     companion object {
         fun newInstance(): Dialog_SubjectActions {
@@ -37,10 +37,7 @@ class Dialog_SubjectActions : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         mUnbinder = ButterKnife.bind(this, view)
-
-
     }
 
     override fun onDestroy() {
@@ -56,11 +53,7 @@ class Dialog_SubjectActions : DialogFragment() {
 
     @OnClick(R.id.subjectactions_btn_edit)
     fun onClickEditSubject() {
-        dismiss()
-    }
-
-    @OnClick(R.id.subjectactions_btn_delete)
-    fun onClickDeleteSubject() {
+        startActivity(Intent(activity, Activity_EditSubject::class.java))
         dismiss()
     }
 }

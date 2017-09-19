@@ -55,12 +55,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.Activity_Main" />
         </activity>
-        <activity android:name=".ui.activities.Activity_ModifyDay"
+        <activity
+            android:name=".ui.activities.Activity_ModifyDay"
             android:label="Modify Day"
             android:parentActivityName=".ui.activities.Activity_Main"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
-            tools:targetApi="jelly_bean" >
+            tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.Activity_Main" />
@@ -75,6 +76,17 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.Activity_Main" />
+        </activity>
+        <activity
+            android:name=".ui.activities.Activity_EditSubject"
+            android:label="Edit Subjects"
+            android:parentActivityName=".ui.activities.Activity_Main"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.thecoders.smarttable.ui.activities.Activity_Main" />
         </activity>
     </application>
 

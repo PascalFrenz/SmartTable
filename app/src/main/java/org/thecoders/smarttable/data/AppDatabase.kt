@@ -19,7 +19,7 @@ import org.thecoders.smarttable.data.pojos.TimetableRow
 
 @Database(
         entities = arrayOf(Homework::class, Exam::class, Subject::class, TimetableRow::class),
-        version = 4
+        version = 5
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -36,6 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 INSTANCE = Room
                         .databaseBuilder(context.applicationContext, AppDatabase::class.java, DB_NAME)
+                        .fallbackToDestructiveMigration()
                         .build()
             }
             return INSTANCE!!
