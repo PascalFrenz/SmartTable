@@ -1,4 +1,4 @@
-package org.thecoders.smarttable.ui.fragments
+package org.thecoders.smarttable.ui.dialogs
 
 import android.app.DatePickerDialog
 import android.app.Dialog
@@ -12,7 +12,7 @@ import java.util.*
  * The dialog that shows up when the user is supposed to pick a date.
  */
 
-class Fragment_DatePicker : DialogFragment(), DatePickerDialog.OnDateSetListener {
+class Dialog_DatePicker : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     private var year: Int = 0
     private var month: Int = 0

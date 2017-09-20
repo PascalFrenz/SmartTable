@@ -1,4 +1,4 @@
-package org.thecoders.smarttable.ui.fragments
+package org.thecoders.smarttable.ui.dialogs
 
 import android.app.Dialog
 import android.app.DialogFragment
@@ -11,7 +11,7 @@ import android.widget.TimePicker
  * The dialog that shows up when the user is supposed to pick a time.
  */
 
-class Fragment_TimePicker : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class Dialog_TimePicker : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val hour = 0
