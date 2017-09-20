@@ -40,41 +40,38 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
 
     fun insert(row: TimetableRow) = AsyncTask.execute { db.timetableModel().insert(row) }
 
-    fun insertOrUpdateLesson(lesson: Lesson, day: String) {
-        val lastLessonId: Int =
-                if(mondayLessons.value?.lastIndex == -1) 0 //TODO: Rework Null-Handling
-                else mondayLessons.value!!.lastIndex + 1
-        Log.v(LOG_TAG, "LastLessonId: $lastLessonId\n" + lesson.toString() )
+    fun insertOrUpdateLesson(lesson: Lesson, day: String, lastLessonIndex: Int) {
+        Log.v(LOG_TAG, "LastLessonId: $lastLessonIndex\n" + lesson.toString() )
 
         when (day) {
             "monday" -> {
                 val lessonMon = LessonMon(lesson.id, lesson.timing, lesson.subjectName)
-                if (lesson.id <= lastLessonId) updateMondayLesson(lessonMon)
+                if (lesson.id <= lastLessonIndex) updateMondayLesson(lessonMon)
                 else insert(TimetableRow(id = lessonMon.id, mon_timing = lessonMon.mon_timing, mon = lessonMon.mon))
             }
 
             "tuesday" -> {
-                lesson as LessonTue
-                if(lesson.id <= lastLessonId) updateTuesdayLesson(lesson)
-                else insert(TimetableRow(id = lesson.id, tue_timing = lesson.tue_timing, tue = lesson.tue))
+                val lessonTue = LessonTue(lesson.id, lesson.timing, lesson.subjectName)
+                if(lesson.id <= lastLessonIndex) updateTuesdayLesson(lessonTue)
+                else insert(TimetableRow(id = lessonTue.id, tue_timing = lessonTue.tue_timing, tue = lessonTue.tue))
             }
 
             "wednesday" -> {
-                lesson as LessonWed
-                if(lesson.id <= lastLessonId) updateWednesdayLesson(lesson)
-                else insert(TimetableRow(id = lesson.id, wed_timing = lesson.wed_timing, wed = lesson.wed))
+                val lessonWed = LessonWed(lesson.id, lesson.timing, lesson.subjectName)
+                if(lesson.id <= lastLessonIndex) updateWednesdayLesson(lessonWed)
+                else insert(TimetableRow(id = lessonWed.id, wed_timing = lessonWed.wed_timing, wed = lessonWed.wed))
             }
 
             "thursday" -> {
-                lesson as LessonThu
-                if(lesson.id <= lastLessonId) updateThursdayLesson(lesson)
-                else insert(TimetableRow(id = lesson.id, thu_timing = lesson.thu_timing, thu = lesson.thu))
+                val lessonThu = LessonThu(lesson.id, lesson.timing, lesson.subjectName)
+                if(lesson.id <= lastLessonIndex) updateThursdayLesson(lessonThu)
+                else insert(TimetableRow(id = lessonThu.id, thu_timing = lessonThu.thu_timing, thu = lessonThu.thu))
             }
 
             "friday" -> {
-                lesson as LessonFri
-                if(lesson.id <= lastLessonId) updateFridayLesson(lesson)
-                else insert(TimetableRow(id = lesson.id, fri_timing = lesson.fri_timing, fri = lesson.fri))
+                val lessonFri = LessonFri(lesson.id, lesson.timing, lesson.subjectName)
+                if(lesson.id <= lastLessonIndex) updateFridayLesson(lessonFri)
+                else insert(TimetableRow(id = lessonFri.id, fri_timing = lessonFri.fri_timing, fri = lessonFri.fri))
             }
         }
     }

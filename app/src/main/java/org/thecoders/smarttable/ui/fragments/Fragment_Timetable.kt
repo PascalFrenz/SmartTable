@@ -49,10 +49,15 @@ class Fragment_Timetable : LifecycleFragment() {
 
     //TODO: Add all days
     private lateinit var mondayLessons: MutableList<Lesson>
+    private lateinit var tuesdayLessons: MutableList<Lesson>
+    private lateinit var wednesdayLessons: MutableList<Lesson>
+    private lateinit var thursdayLessons: MutableList<Lesson>
+    private lateinit var fridayLessons: MutableList<Lesson>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mViewModel = ViewModelProviders.of(this).get(LessonViewModel::class.java)
+        setupDataObservers()
 
         mCallback =
                 try {
@@ -70,18 +75,8 @@ class Fragment_Timetable : LifecycleFragment() {
 
         mLessonAdapter = Adapter_Lesson(activity, mutableListOf(), false)
 
-        mViewModel.mondayLessons.observe(this, Observer {
-            if (it != null) {
-                mondayLessons = (it.filter { it.mon != "NULL" }).toMutableList()
-            }
-        })
-
-        val buttonbarLayoutManager = LinearLayoutManager(context)
-        buttonbarLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        val dividerItemDecoration = DividerItemDecoration(context, buttonbarLayoutManager.orientation)
-
-        mLessonListView.layoutManager = buttonbarLayoutManager
-        mLessonListView.addItemDecoration(dividerItemDecoration)
+        mLessonListView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        mLessonListView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         mLessonListView.adapter = mLessonAdapter
 
         return rootView
@@ -105,8 +100,92 @@ class Fragment_Timetable : LifecycleFragment() {
         return true
     }
 
+    @OnClick(R.id.timetable_tue)
+    fun onClickTue() {
+        mLessonAdapter.alterItems(tuesdayLessons)
+    }
+
+    @OnLongClick(R.id.timetable_tue)
+    fun onLongClickTue(): Boolean {
+        val intent = Intent(context, Activity_ModifyDay::class.java)
+        intent.putExtra("day", "tuesday")
+        startActivity(intent)
+        return true
+    }
+
+    @OnClick(R.id.timetable_wed)
+    fun onClickWed() {
+        mLessonAdapter.alterItems(wednesdayLessons)
+    }
+
+    @OnLongClick(R.id.timetable_wed)
+    fun onLongClickWed(): Boolean {
+        val intent = Intent(context, Activity_ModifyDay::class.java)
+        intent.putExtra("day", "wednesday")
+        startActivity(intent)
+        return true
+    }
+
+    @OnClick(R.id.timetable_thu)
+    fun onClickThu() {
+        mLessonAdapter.alterItems(thursdayLessons)
+    }
+
+    @OnLongClick(R.id.timetable_thu)
+    fun onLongClickThu(): Boolean {
+        val intent = Intent(context, Activity_ModifyDay::class.java)
+        intent.putExtra("day", "thursday")
+        startActivity(intent)
+        return true
+    }
+
+    @OnClick(R.id.timetable_fri)
+    fun onClickFri() {
+        mLessonAdapter.alterItems(fridayLessons)
+    }
+
+    @OnLongClick(R.id.timetable_fri)
+    fun onLongClickFri(): Boolean {
+        val intent = Intent(context, Activity_ModifyDay::class.java)
+        intent.putExtra("day", "friday")
+        startActivity(intent)
+        return true
+    }
+
     @OnClick(R.id.timetable_more)
     fun onClickMore() {
         mCallback.onSubjectActionRequest()
+    }
+
+    private fun setupDataObservers() {
+        mViewModel.mondayLessons.observe(this, Observer {
+            if (it != null) {
+                mondayLessons = (it.filter { it.mon != "NULL" }).toMutableList()
+            }
+        })
+
+        mViewModel.tuesdayLessons.observe(this, Observer {
+            if(it != null) {
+                tuesdayLessons = (it.filter { it.tue != "NULL" }).toMutableList()
+            }
+        })
+
+        mViewModel.wednesdayLessons.observe(this, Observer {
+            if(it != null) {
+                wednesdayLessons = (it.filter { it.wed != "NULL" }).toMutableList()
+            }
+        })
+
+        mViewModel.thursdayLessons.observe(this, Observer {
+            if(it != null) {
+                thursdayLessons = (it.filter { it.thu != "NULL" }).toMutableList()
+            }
+        })
+
+        mViewModel.fridayLessons.observe(this, Observer {
+            if(it != null) {
+                fridayLessons = (it.filter { it.fri != "NULL" }).toMutableList()
+            }
+        })
     }
 }

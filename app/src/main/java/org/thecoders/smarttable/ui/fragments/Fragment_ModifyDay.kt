@@ -101,7 +101,7 @@ class Fragment_ModifyDay : LifecycleFragment(), Activity_ModifyDay.SaveDayListen
             }
 
             data.forEach {
-                mLessonViewModel.insertOrUpdateLesson(it, mDay)
+                mLessonViewModel.insertOrUpdateLesson(it, mDay, overallTimetableItemNumber)
                 Log.v(LOG_TAG, it.toString())
             }
         }
@@ -172,10 +172,42 @@ class Fragment_ModifyDay : LifecycleFragment(), Activity_ModifyDay.SaveDayListen
             "monday" ->
                 mLessonViewModel.mondayLessons.observe(this, Observer {
                     if (it != null) {
-                        mLessonAdapter.alterItems(it.filter { it.mon != "NULL" })
                         overallTimetableItemNumber = it.size
+                        mLessonAdapter.alterItems(it.filter { it.mon != "NULL" })
                     }
                 })
+            "tuesday" -> {
+                mLessonViewModel.tuesdayLessons.observe(this, Observer {
+                    if(it != null) {
+                        overallTimetableItemNumber = it.size
+                        mLessonAdapter.alterItems(it.filter { it.tue != "NULL" })
+                    }
+                })
+            }
+            "wednesday" -> {
+                mLessonViewModel.wednesdayLessons.observe(this, Observer {
+                    if(it != null) {
+                        overallTimetableItemNumber = it.size
+                        mLessonAdapter.alterItems(it.filter { it.wed != "NULL" })
+                    }
+                })
+            }
+            "thursday" -> {
+                mLessonViewModel.thursdayLessons.observe(this, Observer {
+                    if(it != null) {
+                        overallTimetableItemNumber = it.size
+                        mLessonAdapter.alterItems(it.filter { it.thu != "NULL" })
+                    }
+                })
+            }
+            "friday" -> {
+                mLessonViewModel.fridayLessons.observe(this, Observer {
+                    if(it != null) {
+                        overallTimetableItemNumber = it.size
+                        mLessonAdapter.alterItems(it.filter { it.fri != "NULL" })
+                    }
+                })
+            }
             else -> {}
         }
 
