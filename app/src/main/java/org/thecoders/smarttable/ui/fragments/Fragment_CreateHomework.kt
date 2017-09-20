@@ -1,11 +1,11 @@
 package org.thecoders.smarttable.ui.fragments
 
-import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +20,12 @@ import butterknife.Unbinder
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Homework
+import org.thecoders.smarttable.ui.dialogs.Dialog_DatePicker
+import org.thecoders.smarttable.ui.dialogs.Dialog_TimePicker
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 import java.util.*
 
-class Fragment_CreateHomework : LifecycleFragment() {
+class Fragment_CreateHomework : Fragment() {
 
     interface OnAddHomeworkPressedListener {
         /**
@@ -108,9 +110,9 @@ class Fragment_CreateHomework : LifecycleFragment() {
     }
 
     @OnClick(R.id.createhomework_effort_btn)
-    fun showTimePicker() = Fragment_TimePicker().show(activity.fragmentManager, "timePicker")
+    fun showTimePicker() = Dialog_TimePicker().show(activity.fragmentManager, "timePicker")
 
     @OnClick(R.id.createhomework_deadline_btn)
-    fun showDatePicker() = Fragment_DatePicker().show(activity.fragmentManager, "datePicker")
+    fun showDatePicker() = Dialog_DatePicker().show(activity.fragmentManager, "datePicker")
 
 }

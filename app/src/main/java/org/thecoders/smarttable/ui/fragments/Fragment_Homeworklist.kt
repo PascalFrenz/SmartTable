@@ -1,11 +1,11 @@
 package org.thecoders.smarttable.ui.fragments
 
-import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -30,7 +30,7 @@ import org.thecoders.smarttable.viewmodel.HomeworkViewModel
  * it is attached to a SectionsPagerAdapter in the [org.thecoders.smarttable.Activity_Main].
  */
 
-class Fragment_Homeworklist : LifecycleFragment() {
+class Fragment_Homeworklist : Fragment() {
 
     private lateinit var mHomeworkViewModel: HomeworkViewModel
     private lateinit var mHomeworkAdapter: Adapter_Homework

@@ -1,12 +1,12 @@
 package org.thecoders.smarttable.ui.fragments
 
-import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -34,7 +34,7 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
  * Created by frenz on 30.07.2017.
  */
 
-class Fragment_ModifyDay : LifecycleFragment(), Activity_ModifyDay.SaveDayListener {
+class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
 
     private val LOG_TAG = Fragment_ModifyDay::class.java.simpleName
 

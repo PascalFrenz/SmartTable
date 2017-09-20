@@ -1,11 +1,11 @@
 package org.thecoders.smarttable.ui.fragments
 
-import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +17,14 @@ import butterknife.Unbinder
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
+import org.thecoders.smarttable.ui.dialogs.Dialog_DatePicker
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
 /**
  * Created by frenz on 02.07.2017.
  */
 
-class Fragment_CreateExam : LifecycleFragment() {
+class Fragment_CreateExam : Fragment() {
 
     interface OnAddExamPressedListener {
         fun onAddExamRequested(exam: Exam)
@@ -104,6 +105,6 @@ class Fragment_CreateExam : LifecycleFragment() {
     }
 
     @OnClick(R.id.createexam_date_btn)
-    fun showDatePicker() = Fragment_DatePicker().show(activity.fragmentManager, "datePicker")
+    fun showDatePicker() = Dialog_DatePicker().show(activity.fragmentManager, "datePicker")
 
 }

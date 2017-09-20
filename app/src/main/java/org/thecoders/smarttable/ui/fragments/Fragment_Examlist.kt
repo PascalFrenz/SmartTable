@@ -1,7 +1,6 @@
 package org.thecoders.smarttable.ui.fragments
 
 
-import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -29,7 +28,7 @@ import org.thecoders.smarttable.viewmodel.ExamViewModel
 /**
  * A simple [Fragment] subclass.
  */
-class Fragment_Examlist : LifecycleFragment() {
+class Fragment_Examlist : Fragment() {
 
     private lateinit var mExamViewModel: ExamViewModel
     private lateinit var mExamAdapter: Adapter_Exam

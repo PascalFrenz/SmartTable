@@ -1,11 +1,11 @@
 package org.thecoders.smarttable.ui.fragments
 
 
-import android.arch.lifecycle.LifecycleFragment
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -25,7 +25,7 @@ import org.thecoders.smarttable.viewmodel.LessonViewModel
  *
  */
 
-class Fragment_Timetable : LifecycleFragment() {
+class Fragment_Timetable : Fragment() {
 
     interface OnSubjectActionRequest {
         fun onSubjectActionRequest()
