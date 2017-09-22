@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -20,6 +19,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import org.thecoders.smarttable.R
+import org.thecoders.smarttable.SmartTableApplication
 import org.thecoders.smarttable.data.pojos.Lesson
 import org.thecoders.smarttable.helpers.LessonItemTouchHelperCallback
 import org.thecoders.smarttable.helpers.TimeHelper
@@ -28,6 +28,7 @@ import org.thecoders.smarttable.ui.adapters.Adapter_Lesson
 import org.thecoders.smarttable.ui.adapters.Adapter_SubjectButtonBar
 import org.thecoders.smarttable.viewmodel.LessonViewModel
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
+import javax.inject.Inject
 
 
 /**
@@ -52,6 +53,9 @@ class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
     @BindView(R.id.modifyday_listview) lateinit var mLessonListView: RecyclerView
     @BindView(R.id.modifyday_subjectbar) lateinit var mSubjectBar: RecyclerView
 
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -59,6 +63,8 @@ class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
         mLessonViewModel = ViewModelProviders.of(this).get(LessonViewModel::class.java)
 
         mDay = activity.intent.getStringExtra("day")
+
+        (context.applicationContext as SmartTableApplication).appComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -69,8 +75,7 @@ class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
         mLessonAdapter = Adapter_Lesson(activity, mutableListOf(), true)
         mSubjectButtonAdapter = Adapter_SubjectButtonBar(data = mutableListOf())
 
-        //TODO: Use Dagger 2 to inject preferences
-        initLessonListView(PreferenceManager.getDefaultSharedPreferences(context))
+        initLessonListView(sharedPreferences)
         initButtonBar()
 
         setupViewModelObservers()

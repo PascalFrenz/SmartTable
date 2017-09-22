@@ -1,6 +1,7 @@
 package org.thecoders.smarttable
 
 import dagger.Component
+import org.thecoders.smarttable.ui.fragments.Fragment_ModifyDay
 import org.thecoders.smarttable.viewmodel.ExamViewModel
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
 import org.thecoders.smarttable.viewmodel.LessonViewModel
@@ -23,4 +24,6 @@ interface AppComponent {
     fun inject(into: ExamViewModel)
     fun inject(into: SubjectViewModel)
     fun inject(into: LessonViewModel)
+
+    fun inject(into: Fragment_ModifyDay)
 }
