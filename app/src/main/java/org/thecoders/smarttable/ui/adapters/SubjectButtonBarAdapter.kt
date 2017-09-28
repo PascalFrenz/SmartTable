@@ -13,8 +13,8 @@ import org.thecoders.smarttable.R
 /**
  * Created by frenz on 14.09.2017.
  */
-class Adapter_SubjectButtonBar(var data: MutableList<String>)
-    : RecyclerView.Adapter<Adapter_SubjectButtonBar.SubjectButtonViewHolder>() {
+class SubjectButtonBarAdapter(var data: MutableList<String>)
+    : RecyclerView.Adapter<SubjectButtonBarAdapter.SubjectButtonViewHolder>() {
 
     class SubjectButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(subjectName: String) {

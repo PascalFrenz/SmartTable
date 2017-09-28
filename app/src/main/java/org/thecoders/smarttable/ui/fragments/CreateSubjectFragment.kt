@@ -23,7 +23,7 @@ import org.thecoders.smarttable.data.pojos.Subject
  * Created by frenz on 29.06.2017.
  */
 
-class Fragment_CreateSubject : Fragment(), SimpleDialog.OnDialogResultListener {
+class CreateSubjectFragment : Fragment(), SimpleDialog.OnDialogResultListener {
 
     /**
      * Establishes a communication from Fragment to Activity. It is used to pass

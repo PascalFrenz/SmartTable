@@ -7,9 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_modify_day.*
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.ui.fragments.Fragment_ModifyDay
+import org.thecoders.smarttable.ui.fragments.ModifyDayFragment
 
-class Activity_ModifyDay : AppCompatActivity() {
+class ModifyDayActivity : AppCompatActivity() {
 
     interface SaveDayListener {
         fun saveDay()
@@ -18,12 +18,12 @@ class Activity_ModifyDay : AppCompatActivity() {
     private lateinit var mCallback: SaveDayListener
 
 
-    private lateinit var mModifyDayFragment: Fragment_ModifyDay
+    private lateinit var mModifyDayFragment: ModifyDayFragment
     private lateinit var mDay: String
 
 
     companion object {
-        private val LOG_TAG = Activity_ModifyDay::class.java.simpleName
+        private val LOG_TAG = ModifyDayActivity::class.java.simpleName
     }
 
 
@@ -37,7 +37,7 @@ class Activity_ModifyDay : AppCompatActivity() {
             if(savedInstanceState != null)
                 return
 
-            mModifyDayFragment = Fragment_ModifyDay()
+            mModifyDayFragment = ModifyDayFragment()
             mModifyDayFragment.arguments = intent.extras
 
             mCallback = try {

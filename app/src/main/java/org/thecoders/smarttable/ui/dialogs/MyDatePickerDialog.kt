@@ -12,7 +12,7 @@ import java.util.*
  * The dialog that shows up when the user is supposed to pick a date.
  */
 
-class Dialog_DatePicker : DialogFragment(), DatePickerDialog.OnDateSetListener {
+class MyDatePickerDialog : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     private var year: Int = 0
     private var month: Int = 0

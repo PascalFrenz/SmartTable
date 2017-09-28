@@ -10,17 +10,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.pojos.Subject
-import org.thecoders.smarttable.ui.dialogs.Dialog_ConfirmDelete
+import org.thecoders.smarttable.ui.dialogs.ConfirmDeleteDialog
 
 
 /**
  * Created by frenz on 24.06.2017.
  */
-class Adapter_Subject(val context: Context, var data: MutableList<Subject>, private val enableEdit: Boolean, private val dbEdit: Boolean) :
-        RecyclerView.Adapter<Adapter_Subject.SubjectViewHolder>() {
+class SubjectAdapter(val context: Context, var data: MutableList<Subject>, private val enableEdit: Boolean, private val dbEdit: Boolean) :
+        RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder>() {
 
     companion object {
-        private val LOG_TAG = Adapter_Subject::class.java.simpleName
+        private val LOG_TAG = SubjectAdapter::class.java.simpleName
     }
 
     inner class SubjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -69,7 +69,7 @@ class Adapter_Subject(val context: Context, var data: MutableList<Subject>, priv
 
 
     private fun displayDeleteDialog(subject: Subject, context: Context) {
-        val confirmDeleteDialog = Dialog_ConfirmDelete()
+        val confirmDeleteDialog = ConfirmDeleteDialog()
         confirmDeleteDialog.objectToDelete = subject
         confirmDeleteDialog.objectAdapter = this
         confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)

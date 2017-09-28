@@ -18,11 +18,11 @@ import java.util.*
  * Created by frenz on 30.07.2017.
  */
 
-class Adapter_Lesson(val context: Context, var data: MutableList<Lesson>, val enableEdit: Boolean) :
-        RecyclerView.Adapter<Adapter_Lesson.LessonViewHolder>(), LessonItemTouchHelperAdapter {
+class LessonAdapter(val context: Context, var data: MutableList<Lesson>, val enableEdit: Boolean) :
+        RecyclerView.Adapter<LessonAdapter.LessonViewHolder>(), LessonItemTouchHelperAdapter {
 
     companion object {
-        private val LOG_TAG = Adapter_Lesson::class.java.simpleName
+        private val LOG_TAG = LessonAdapter::class.java.simpleName
     }
 
     inner class LessonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LessonItemTouchHelperViewHolder {

@@ -9,10 +9,10 @@ import android.widget.Toast
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.AppDatabase
 import org.thecoders.smarttable.data.pojos.*
-import org.thecoders.smarttable.ui.adapters.Adapter_Exam
-import org.thecoders.smarttable.ui.adapters.Adapter_Homework
-import org.thecoders.smarttable.ui.adapters.Adapter_Lesson
-import org.thecoders.smarttable.ui.adapters.Adapter_Subject
+import org.thecoders.smarttable.ui.adapters.ExamAdapter
+import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
+import org.thecoders.smarttable.ui.adapters.LessonAdapter
+import org.thecoders.smarttable.ui.adapters.SubjectAdapter
 
 
 /**
@@ -21,7 +21,7 @@ import org.thecoders.smarttable.ui.adapters.Adapter_Subject
  * from the database. It makes sure the user did not toggle the action accidentally
  */
 //Empty Constructor as required by Guidelines
-class Dialog_ConfirmDelete : DialogFragment() {
+class ConfirmDeleteDialog : DialogFragment() {
 
     var objectToDelete: Any? = null
     var objectAdapter: Any? = null
@@ -33,7 +33,7 @@ class Dialog_ConfirmDelete : DialogFragment() {
         when (objectToDelete) {
             is Homework -> {
                 val homeworkToDelete = objectToDelete as Homework
-                val homeworkAdapter = objectAdapter as Adapter_Homework
+                val homeworkAdapter = objectAdapter as HomeworkAdapter
                 builder.setMessage(R.string.title_confirm_delete_dialog)
                         .setPositiveButton(R.string.action_delete) { dialog, _ ->
                             AsyncTask.execute {
@@ -50,7 +50,7 @@ class Dialog_ConfirmDelete : DialogFragment() {
             }
             is Exam -> {
                 val examToDelete = objectToDelete as Exam
-                val examAdapter = objectAdapter as Adapter_Exam
+                val examAdapter = objectAdapter as ExamAdapter
                 builder.setMessage(R.string.title_confirm_delete_dialog)
                         .setPositiveButton(R.string.action_delete) { dialog, _ ->
                             AsyncTask.execute {
@@ -66,7 +66,7 @@ class Dialog_ConfirmDelete : DialogFragment() {
             }
             is Subject -> {
                 val subjectToDelete = objectToDelete as Subject
-                val subjectAdapter = objectAdapter as Adapter_Subject
+                val subjectAdapter = objectAdapter as SubjectAdapter
                 builder.setMessage(R.string.title_confirm_delete_dialog)
                         .setPositiveButton(R.string.action_delete) { dialog, _ ->
                             AsyncTask.execute {
@@ -82,7 +82,7 @@ class Dialog_ConfirmDelete : DialogFragment() {
             }
             is Lesson -> {
                 val lessonToDelete = objectToDelete as Lesson
-                val lessonAdapter = objectAdapter as Adapter_Lesson
+                val lessonAdapter = objectAdapter as LessonAdapter
                 builder.setMessage(R.string.title_confirm_delete_dialog)
                         .setPositiveButton(R.string.action_delete) { dialog, _ ->
                             AsyncTask.execute {

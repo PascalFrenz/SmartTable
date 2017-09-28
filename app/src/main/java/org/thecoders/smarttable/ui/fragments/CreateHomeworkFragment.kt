@@ -20,12 +20,12 @@ import butterknife.Unbinder
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Homework
-import org.thecoders.smarttable.ui.dialogs.Dialog_DatePicker
-import org.thecoders.smarttable.ui.dialogs.Dialog_TimePicker
+import org.thecoders.smarttable.ui.dialogs.MyDatePickerDialog
+import org.thecoders.smarttable.ui.dialogs.MyTimePickerDialog
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 import java.util.*
 
-class Fragment_CreateHomework : Fragment() {
+class CreateHomeworkFragment : Fragment() {
 
     interface OnAddHomeworkPressedListener {
         /**
@@ -110,9 +110,9 @@ class Fragment_CreateHomework : Fragment() {
     }
 
     @OnClick(R.id.createhomework_effort_btn)
-    fun showTimePicker() = Dialog_TimePicker().show(activity.fragmentManager, "timePicker")
+    fun showTimePicker() = MyTimePickerDialog().show(activity.fragmentManager, "timePicker")
 
     @OnClick(R.id.createhomework_deadline_btn)
-    fun showDatePicker() = Dialog_DatePicker().show(activity.fragmentManager, "datePicker")
+    fun showDatePicker() = MyDatePickerDialog().show(activity.fragmentManager, "datePicker")
 
 }

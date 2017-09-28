@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activities.Activity_Main"
+            android:name=".ui.activities.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme">
@@ -23,70 +23,70 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.Activity_CreateHomework"
+            android:name=".ui.activities.CreateHomeworkActivity"
             android:label="New Homework"
-            android:parentActivityName=".ui.activities.Activity_Main"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.Activity_Main" />
+                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activities.Activity_CreateSubject"
+            android:name=".ui.activities.CreateSubjectActivity"
             android:label="New Subject"
-            android:parentActivityName=".ui.activities.Activity_Main"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.Activity_Main" />
+                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activities.Activity_CreateExam"
+            android:name=".ui.activities.CreateExamActivity"
             android:label="New Exam"
-            android:parentActivityName=".ui.activities.Activity_Main"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.Activity_Main" />
+                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activities.Activity_ModifyDay"
+            android:name=".ui.activities.ModifyDayActivity"
             android:label="Modify Day"
-            android:parentActivityName=".ui.activities.Activity_Main"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.Activity_Main" />
+                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activities.Activity_Settings"
+            android:name=".ui.activities.SettingsActivity"
             android:label="Settings"
-            android:parentActivityName=".ui.activities.Activity_Main"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.Activity_Main" />
+                android:value=".ui.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activities.Activity_EditSubject"
+            android:name=".ui.activities.EditSubjectActivity"
             android:label="Edit Subjects"
-            android:parentActivityName=".ui.activities.Activity_Main"
+            android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.thecoders.smarttable.ui.activities.Activity_Main" />
+                android:value="org.thecoders.smarttable.ui.activities.MainActivity" />
         </activity>
     </application>
 

@@ -20,18 +20,18 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_examlist.view.*
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.ui.activities.Activity_CreateExam
-import org.thecoders.smarttable.ui.adapters.Adapter_Exam
+import org.thecoders.smarttable.ui.activities.CreateExamActivity
+import org.thecoders.smarttable.ui.adapters.ExamAdapter
 import org.thecoders.smarttable.viewmodel.ExamViewModel
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class Fragment_Examlist : Fragment() {
+class ExamlistFragment : Fragment() {
 
     private lateinit var mExamViewModel: ExamViewModel
-    private lateinit var mExamAdapter: Adapter_Exam
+    private lateinit var mExamAdapter: ExamAdapter
     var mSharedFab: FloatingActionButton? = null
 
     private lateinit var mUnbinder: Unbinder
@@ -39,7 +39,7 @@ class Fragment_Examlist : Fragment() {
     @BindView(R.id.examlist_swiperefreshlayout) lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     companion object {
-        private val LOG_TAG = Fragment_Examlist::class.java.simpleName
+        private val LOG_TAG = ExamlistFragment::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +53,7 @@ class Fragment_Examlist : Fragment() {
         mUnbinder = ButterKnife.bind(this, rootView)
 
         //Create the Adapter
-        mExamAdapter = Adapter_Exam(activity, mutableListOf(), true)
+        mExamAdapter = ExamAdapter(activity, mutableListOf(), true)
 
         //Let the Adapter change upon change in the ViewModels data
         mExamViewModel.examList.observe(this, Observer {
@@ -96,7 +96,7 @@ class Fragment_Examlist : Fragment() {
             mSharedFab?.setImageResource(R.drawable.ic_add_24px)
             mSharedFab?.setOnClickListener {
                 Log.v(LOG_TAG, "FloatingActionButton pressed!")
-                startActivity(Intent(context, Activity_CreateExam::class.java))
+                startActivity(Intent(context, CreateExamActivity::class.java))
             }
         }
     }

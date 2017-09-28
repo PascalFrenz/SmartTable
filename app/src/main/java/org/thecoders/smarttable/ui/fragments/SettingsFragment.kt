@@ -10,10 +10,10 @@ import org.thecoders.smarttable.R
  * Created by frenz on 12.07.2017.
  */
 
-class Fragment_Settings : PreferenceFragment() {
+class SettingsFragment : PreferenceFragment() {
 
     companion object {
-        private val LOG_TAG = Fragment_Settings::class.java.simpleName
+        private val LOG_TAG = SettingsFragment::class.java.simpleName
 
         val ID_LESSON_LENGTH = "pref_lesson_length"
         val ID_DAY_START = "pref_day_start"

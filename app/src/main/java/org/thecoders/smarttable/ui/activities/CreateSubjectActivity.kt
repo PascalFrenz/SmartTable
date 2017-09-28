@@ -7,13 +7,13 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create_subject.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.pojos.Subject
-import org.thecoders.smarttable.ui.fragments.Fragment_CreateSubject
+import org.thecoders.smarttable.ui.fragments.CreateSubjectFragment
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
 /**
  * Created by frenz on 29.06.2017.
  */
-class Activity_CreateSubject : AppCompatActivity(), Fragment_CreateSubject.OnAddSubjectPressedListener {
+class CreateSubjectActivity : AppCompatActivity(), CreateSubjectFragment.OnAddSubjectPressedListener {
 
     private lateinit var mSubjectViewModel: SubjectViewModel
 
@@ -27,7 +27,7 @@ class Activity_CreateSubject : AppCompatActivity(), Fragment_CreateSubject.OnAdd
             if(savedInstanceState != null)
                 return
 
-            val createLessonFragment = Fragment_CreateSubject()
+            val createLessonFragment = CreateSubjectFragment()
 
             createLessonFragment.arguments = intent.extras
 

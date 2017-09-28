@@ -10,7 +10,7 @@ import android.widget.TimePicker
 import org.thecoders.smarttable.helpers.TimeHelper
 
 @Suppress("DEPRECATION")
-class Dialog_TimePreference(ctxt: Context, attrs: AttributeSet) : DialogPreference(ctxt, attrs) {
+class TimePreferenceDialog(ctxt: Context, attrs: AttributeSet) : DialogPreference(ctxt, attrs) {
     private var lastHour = 0
     private var lastMinute = 0
     private lateinit var picker: TimePicker

@@ -12,18 +12,18 @@ import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
-import org.thecoders.smarttable.ui.dialogs.Dialog_ConfirmDelete
+import org.thecoders.smarttable.ui.dialogs.ConfirmDeleteDialog
 import java.util.*
 
 /**
  * Created by frenz on 24.06.2017.
  */
 
-class Adapter_Exam(val context: Context, var data: MutableList<Exam>, val enableEdit: Boolean) :
-        RecyclerView.Adapter<Adapter_Exam.ExamViewHolder>() {
+class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableEdit: Boolean) :
+        RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
 
     companion object {
-        private val LOG_TAG = Adapter_Exam::class.java.simpleName
+        private val LOG_TAG = ExamAdapter::class.java.simpleName
     }
 
     inner class ExamViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -81,7 +81,7 @@ class Adapter_Exam(val context: Context, var data: MutableList<Exam>, val enable
 
 
     private fun displayDeleteDialog(exam: Exam, context: Context) {
-        val confirmDeleteDialog = Dialog_ConfirmDelete()
+        val confirmDeleteDialog = ConfirmDeleteDialog()
         confirmDeleteDialog.objectToDelete = exam
         confirmDeleteDialog.objectAdapter = this
         confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)

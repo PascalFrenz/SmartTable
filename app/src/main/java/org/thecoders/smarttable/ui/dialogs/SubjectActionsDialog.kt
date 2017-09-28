@@ -12,13 +12,13 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.ui.activities.Activity_CreateSubject
-import org.thecoders.smarttable.ui.activities.Activity_EditSubject
+import org.thecoders.smarttable.ui.activities.CreateSubjectActivity
+import org.thecoders.smarttable.ui.activities.EditSubjectActivity
 
 /**
  * Created by frenz on 18.09.2017.
  */
-class Dialog_SubjectActions : DialogFragment() {
+class SubjectActionsDialog : DialogFragment() {
 
     private lateinit var mUnbinder: Unbinder
 
@@ -26,8 +26,8 @@ class Dialog_SubjectActions : DialogFragment() {
     @BindView(R.id.subjectactions_btn_edit) lateinit var editSubject: Button
 
     companion object {
-        fun newInstance(): Dialog_SubjectActions {
-            return Dialog_SubjectActions()
+        fun newInstance(): SubjectActionsDialog {
+            return SubjectActionsDialog()
         }
     }
 
@@ -47,13 +47,13 @@ class Dialog_SubjectActions : DialogFragment() {
 
     @OnClick(R.id.subjectactions_btn_new)
     fun onClickNewSubject() {
-        startActivity(Intent(activity, Activity_CreateSubject::class.java))
+        startActivity(Intent(activity, CreateSubjectActivity::class.java))
         dismiss()
     }
 
     @OnClick(R.id.subjectactions_btn_edit)
     fun onClickEditSubject() {
-        startActivity(Intent(activity, Activity_EditSubject::class.java))
+        startActivity(Intent(activity, EditSubjectActivity::class.java))
         dismiss()
     }
 }

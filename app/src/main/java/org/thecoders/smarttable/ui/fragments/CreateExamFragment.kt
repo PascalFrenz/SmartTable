@@ -17,14 +17,14 @@ import butterknife.Unbinder
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
-import org.thecoders.smarttable.ui.dialogs.Dialog_DatePicker
+import org.thecoders.smarttable.ui.dialogs.MyDatePickerDialog
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
 /**
  * Created by frenz on 02.07.2017.
  */
 
-class Fragment_CreateExam : Fragment() {
+class CreateExamFragment : Fragment() {
 
     interface OnAddExamPressedListener {
         fun onAddExamRequested(exam: Exam)
@@ -105,6 +105,6 @@ class Fragment_CreateExam : Fragment() {
     }
 
     @OnClick(R.id.createexam_date_btn)
-    fun showDatePicker() = Dialog_DatePicker().show(activity.fragmentManager, "datePicker")
+    fun showDatePicker() = MyDatePickerDialog().show(activity.fragmentManager, "datePicker")
 
 }

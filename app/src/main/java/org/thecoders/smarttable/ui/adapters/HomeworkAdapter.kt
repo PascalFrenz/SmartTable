@@ -13,7 +13,7 @@ import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Homework
-import org.thecoders.smarttable.ui.dialogs.Dialog_ConfirmDelete
+import org.thecoders.smarttable.ui.dialogs.ConfirmDeleteDialog
 import java.util.*
 
 /**
@@ -26,7 +26,7 @@ import java.util.*
  * The items can be deleted via a delete icon which toggles a dialog, where
  * the user is asked to acknowledge the deletion.
  * When acknowledged, the selected Homework is deleted in the List, as well
- * as in the Database. Look at [Dialog_ConfirmDelete] to learn more
+ * as in the Database. Look at [ConfirmDeleteDialog] to learn more
  * about the deletion Dialog and at the implementation of the Homework object
  * to learn more about how it is deleted in the DB
 
@@ -34,11 +34,11 @@ import java.util.*
  * constructor.
 
  */
-class Adapter_Homework(val context: Context, var data: MutableList<Homework>, val enableEdit: Boolean) :
-        RecyclerView.Adapter<Adapter_Homework.HomeworkViewHolder>() {
+class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val enableEdit: Boolean) :
+        RecyclerView.Adapter<HomeworkAdapter.HomeworkViewHolder>() {
 
     companion object {
-        private val LOG_TAG = Adapter_Homework::class.java.simpleName
+        private val LOG_TAG = HomeworkAdapter::class.java.simpleName
     }
 
     inner class HomeworkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -95,7 +95,7 @@ class Adapter_Homework(val context: Context, var data: MutableList<Homework>, va
 
 
     private fun displayDeleteDialog(homework: Homework, context: Context) {
-        val confirmDeleteDialog = Dialog_ConfirmDelete()
+        val confirmDeleteDialog = ConfirmDeleteDialog()
         confirmDeleteDialog.objectToDelete = homework
         confirmDeleteDialog.objectAdapter = this
         confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)

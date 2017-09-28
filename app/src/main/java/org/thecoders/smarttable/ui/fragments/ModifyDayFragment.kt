@@ -23,9 +23,9 @@ import org.thecoders.smarttable.SmartTableApplication
 import org.thecoders.smarttable.data.pojos.Lesson
 import org.thecoders.smarttable.helpers.LessonItemTouchHelperCallback
 import org.thecoders.smarttable.helpers.TimeHelper
-import org.thecoders.smarttable.ui.activities.Activity_ModifyDay
-import org.thecoders.smarttable.ui.adapters.Adapter_Lesson
-import org.thecoders.smarttable.ui.adapters.Adapter_SubjectButtonBar
+import org.thecoders.smarttable.ui.activities.ModifyDayActivity
+import org.thecoders.smarttable.ui.adapters.LessonAdapter
+import org.thecoders.smarttable.ui.adapters.SubjectButtonBarAdapter
 import org.thecoders.smarttable.viewmodel.LessonViewModel
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 import javax.inject.Inject
@@ -35,17 +35,17 @@ import javax.inject.Inject
  * Created by frenz on 30.07.2017.
  */
 
-class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
+class ModifyDayFragment : Fragment(), ModifyDayActivity.SaveDayListener {
 
-    private val LOG_TAG = Fragment_ModifyDay::class.java.simpleName
+    private val LOG_TAG = ModifyDayFragment::class.java.simpleName
 
     private lateinit var mUnbinder: Unbinder
 
     private lateinit var mSubjectViewModel: SubjectViewModel
     private lateinit var mLessonViewModel: LessonViewModel
 
-    private lateinit var mSubjectButtonAdapter: Adapter_SubjectButtonBar
-    private lateinit var mLessonAdapter: Adapter_Lesson
+    private lateinit var mSubjectButtonAdapter: SubjectButtonBarAdapter
+    private lateinit var mLessonAdapter: LessonAdapter
 
     private lateinit var mDay: String
     private var overallTimetableItemNumber = 0
@@ -72,8 +72,8 @@ class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
 
         mUnbinder = ButterKnife.bind(this, rootView)
 
-        mLessonAdapter = Adapter_Lesson(activity, mutableListOf(), true)
-        mSubjectButtonAdapter = Adapter_SubjectButtonBar(data = mutableListOf())
+        mLessonAdapter = LessonAdapter(activity, mutableListOf(), true)
+        mSubjectButtonAdapter = SubjectButtonBarAdapter(data = mutableListOf())
 
         initLessonListView(sharedPreferences)
         initButtonBar()
@@ -119,8 +119,8 @@ class Fragment_ModifyDay : Fragment(), Activity_ModifyDay.SaveDayListener {
         mLessonListView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         mLessonListView.adapter = mLessonAdapter
 
-        val startOfDay = preferences.getString(Fragment_Settings.ID_DAY_START, "")
-        val lessonDuration = TimeHelper.getMinutes(preferences.getString(Fragment_Settings.ID_LESSON_LENGTH, ""))
+        val startOfDay = preferences.getString(SettingsFragment.ID_DAY_START, "")
+        val lessonDuration = TimeHelper.getMinutes(preferences.getString(SettingsFragment.ID_LESSON_LENGTH, ""))
 
         val callback = LessonItemTouchHelperCallback(mLessonAdapter)
         val touchHelper = ItemTouchHelper(callback)

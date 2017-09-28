@@ -5,21 +5,19 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.NavUtils
 import android.support.v7.app.AppCompatActivity
-import android.widget.DatePicker
 import kotlinx.android.synthetic.main.activity_create_exam.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.pojos.Exam
-import org.thecoders.smarttable.ui.dialogs.Dialog_DatePicker
-import org.thecoders.smarttable.ui.fragments.Fragment_CreateExam
+import org.thecoders.smarttable.ui.fragments.CreateExamFragment
 import org.thecoders.smarttable.viewmodel.ExamViewModel
 
 /**
  * Created by frenz on 02.07.2017.
  */
 
-class Activity_CreateExam : AppCompatActivity(), DatePickerDialog.OnDateSetListener, Fragment_CreateExam.OnAddExamPressedListener {
+class CreateExamActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, CreateExamFragment.OnAddExamPressedListener {
 
-    private lateinit var mFragment: Fragment_CreateExam
+    private lateinit var mFragment: CreateExamFragment
     private lateinit var mExamViewModel: ExamViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +31,7 @@ class Activity_CreateExam : AppCompatActivity(), DatePickerDialog.OnDateSetListe
             if(savedInstanceState != null)
                 return
 
-            mFragment = Fragment_CreateExam()
+            mFragment = CreateExamFragment()
             mFragment.arguments = intent.extras
 
             supportFragmentManager.beginTransaction()
@@ -42,8 +40,8 @@ class Activity_CreateExam : AppCompatActivity(), DatePickerDialog.OnDateSetListe
         }
     }
 
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        mFragment.mDate.setText(Dialog_DatePicker.getDateSet(dayOfMonth, month, year))
+    override fun onDateSet(view: android.widget.DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        mFragment.mDate.setText(DatePicker.getDateSet(dayOfMonth, month, year))
     }
 
     override fun onAddExamRequested(exam: Exam) {

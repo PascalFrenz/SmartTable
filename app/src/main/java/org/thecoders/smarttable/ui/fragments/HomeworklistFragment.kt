@@ -19,8 +19,8 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_homeworklist.view.*
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.ui.activities.Activity_CreateHomework
-import org.thecoders.smarttable.ui.adapters.Adapter_Homework
+import org.thecoders.smarttable.ui.activities.CreateHomeworkActivity
+import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
 
 /**
@@ -30,10 +30,10 @@ import org.thecoders.smarttable.viewmodel.HomeworkViewModel
  * it is attached to a SectionsPagerAdapter in the [org.thecoders.smarttable.Activity_Main].
  */
 
-class Fragment_Homeworklist : Fragment() {
+class HomeworklistFragment : Fragment() {
 
     private lateinit var mHomeworkViewModel: HomeworkViewModel
-    private lateinit var mHomeworkAdapter: Adapter_Homework
+    private lateinit var mHomeworkAdapter: HomeworkAdapter
     var mSharedFab: FloatingActionButton? = null
 
     private lateinit var mUnbinder: Unbinder
@@ -41,7 +41,7 @@ class Fragment_Homeworklist : Fragment() {
     @BindView(R.id.homeworklist_swiperefreshlayout) lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     companion object {
-        private val LOG_TAG = Fragment_Homeworklist::class.java.simpleName
+        private val LOG_TAG = HomeworklistFragment::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class Fragment_Homeworklist : Fragment() {
 
         mUnbinder = ButterKnife.bind(this, rootView)
 
-        mHomeworkAdapter = Adapter_Homework(activity, mutableListOf(), true)
+        mHomeworkAdapter = HomeworkAdapter(activity, mutableListOf(), true)
 
         mHomeworkViewModel.homeworkList.observe(this, Observer {
             if (it != null) {
@@ -93,7 +93,7 @@ class Fragment_Homeworklist : Fragment() {
             mSharedFab?.setImageResource(R.drawable.ic_add_24px)
             mSharedFab?.setOnClickListener {
                 Log.v(LOG_TAG, "FloatingActionButton pressed!")
-                startActivity(Intent(context, Activity_CreateHomework::class.java))
+                startActivity(Intent(context, CreateHomeworkActivity::class.java))
             }
         }
     }

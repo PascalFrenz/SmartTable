@@ -11,7 +11,7 @@ import android.widget.TimePicker
  * The dialog that shows up when the user is supposed to pick a time.
  */
 
-class Dialog_TimePicker : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class MyTimePickerDialog : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val hour = 0

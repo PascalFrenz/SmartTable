@@ -2,7 +2,7 @@ package org.thecoders.smarttable.helpers
 
 import android.content.Context
 import android.preference.PreferenceManager
-import org.thecoders.smarttable.ui.fragments.Fragment_Settings
+import org.thecoders.smarttable.ui.fragments.SettingsFragment
 
 /**
  * Created by frenz on 31.07.2017.
@@ -61,8 +61,8 @@ class TimeHelper {
 
         fun calcTimingById(context: Context, id: Int) : String {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            val startOfDay = preferences.getString(Fragment_Settings.ID_DAY_START, "")
-            val lessonDuration = getMinutes(preferences.getString(Fragment_Settings.ID_LESSON_LENGTH, ""))
+            val startOfDay = preferences.getString(SettingsFragment.ID_DAY_START, "")
+            val lessonDuration = getMinutes(preferences.getString(SettingsFragment.ID_LESSON_LENGTH, ""))
 
             val startTime = addTime(startOfDay, (lessonDuration.toInt() * id).toString())
             val endTime = addTime(startTime, lessonDuration)

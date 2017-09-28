@@ -16,8 +16,8 @@ import android.widget.Button
 import butterknife.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.pojos.Lesson
-import org.thecoders.smarttable.ui.activities.Activity_ModifyDay
-import org.thecoders.smarttable.ui.adapters.Adapter_Lesson
+import org.thecoders.smarttable.ui.activities.ModifyDayActivity
+import org.thecoders.smarttable.ui.adapters.LessonAdapter
 import org.thecoders.smarttable.viewmodel.LessonViewModel
 
 
@@ -25,7 +25,7 @@ import org.thecoders.smarttable.viewmodel.LessonViewModel
  *
  */
 
-class Fragment_Timetable : Fragment() {
+class TimetableFragment : Fragment() {
 
     interface OnSubjectActionRequest {
         fun onSubjectActionRequest()
@@ -45,7 +45,7 @@ class Fragment_Timetable : Fragment() {
     private lateinit var mCallback: OnSubjectActionRequest
 
     private lateinit var mViewModel: LessonViewModel
-    private lateinit var mLessonAdapter: Adapter_Lesson
+    private lateinit var mLessonAdapter: LessonAdapter
 
     //TODO: Add all days
     private lateinit var mondayLessons: MutableList<Lesson>
@@ -73,7 +73,7 @@ class Fragment_Timetable : Fragment() {
 
         unbinder = ButterKnife.bind(this, rootView)
 
-        mLessonAdapter = Adapter_Lesson(activity, mutableListOf(), false)
+        mLessonAdapter = LessonAdapter(activity, mutableListOf(), false)
 
         mLessonListView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         mLessonListView.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
@@ -94,7 +94,7 @@ class Fragment_Timetable : Fragment() {
 
     @OnLongClick(R.id.timetable_mon)
     fun onLongClickMon(): Boolean {
-        val intent = Intent(context, Activity_ModifyDay::class.java)
+        val intent = Intent(context, ModifyDayActivity::class.java)
         intent.putExtra("day", "monday")
         startActivity(intent)
         return true
@@ -107,7 +107,7 @@ class Fragment_Timetable : Fragment() {
 
     @OnLongClick(R.id.timetable_tue)
     fun onLongClickTue(): Boolean {
-        val intent = Intent(context, Activity_ModifyDay::class.java)
+        val intent = Intent(context, ModifyDayActivity::class.java)
         intent.putExtra("day", "tuesday")
         startActivity(intent)
         return true
@@ -120,7 +120,7 @@ class Fragment_Timetable : Fragment() {
 
     @OnLongClick(R.id.timetable_wed)
     fun onLongClickWed(): Boolean {
-        val intent = Intent(context, Activity_ModifyDay::class.java)
+        val intent = Intent(context, ModifyDayActivity::class.java)
         intent.putExtra("day", "wednesday")
         startActivity(intent)
         return true
@@ -133,7 +133,7 @@ class Fragment_Timetable : Fragment() {
 
     @OnLongClick(R.id.timetable_thu)
     fun onLongClickThu(): Boolean {
-        val intent = Intent(context, Activity_ModifyDay::class.java)
+        val intent = Intent(context, ModifyDayActivity::class.java)
         intent.putExtra("day", "thursday")
         startActivity(intent)
         return true
@@ -146,7 +146,7 @@ class Fragment_Timetable : Fragment() {
 
     @OnLongClick(R.id.timetable_fri)
     fun onLongClickFri(): Boolean {
-        val intent = Intent(context, Activity_ModifyDay::class.java)
+        val intent = Intent(context, ModifyDayActivity::class.java)
         intent.putExtra("day", "friday")
         startActivity(intent)
         return true

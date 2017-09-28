@@ -16,12 +16,12 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_main.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.AppDatabase
-import org.thecoders.smarttable.ui.dialogs.Dialog_SubjectActions
-import org.thecoders.smarttable.ui.fragments.Fragment_Examlist
-import org.thecoders.smarttable.ui.fragments.Fragment_Homeworklist
-import org.thecoders.smarttable.ui.fragments.Fragment_Timetable
+import org.thecoders.smarttable.ui.dialogs.SubjectActionsDialog
+import org.thecoders.smarttable.ui.fragments.ExamlistFragment
+import org.thecoders.smarttable.ui.fragments.HomeworklistFragment
+import org.thecoders.smarttable.ui.fragments.TimetableFragment
 
-class Activity_Main : AppCompatActivity(), Fragment_Timetable.OnSubjectActionRequest {
+class MainActivity : AppCompatActivity(), TimetableFragment.OnSubjectActionRequest {
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -43,7 +43,7 @@ class Activity_Main : AppCompatActivity(), Fragment_Timetable.OnSubjectActionReq
      */
 
     companion object {
-        private val LOG_TAG = Activity_Main::class.java.simpleName
+        private val LOG_TAG = MainActivity::class.java.simpleName
         private val STATE_PAGE_ID = "currentPageID"
     }
 
@@ -86,24 +86,24 @@ class Activity_Main : AppCompatActivity(), Fragment_Timetable.OnSubjectActionReq
                         when(activity_main_viewpager.currentItem) {
                             0 -> {
                                 (activity_main_viewpager.adapter
-                                        .instantiateItem(activity_main_viewpager, 0) as Fragment_Examlist)
+                                        .instantiateItem(activity_main_viewpager, 0) as ExamlistFragment)
                                         .shareFab(mSharedFab)
                                 mSharedFab?.show()
                             }
                             1 -> {
                                 (activity_main_viewpager.adapter
-                                        .instantiateItem(activity_main_viewpager, 0) as Fragment_Examlist)
+                                        .instantiateItem(activity_main_viewpager, 0) as ExamlistFragment)
                                         .shareFab(null)
 
                                 (activity_main_viewpager.adapter
-                                        .instantiateItem(activity_main_viewpager, 2) as Fragment_Homeworklist)
+                                        .instantiateItem(activity_main_viewpager, 2) as HomeworklistFragment)
                                         .shareFab(null)
 
                                 if(mSharedFab?.isShown as Boolean) mSharedFab?.hide()
                             }
                             2 -> {
                                 (activity_main_viewpager.adapter
-                                        .instantiateItem(activity_main_viewpager, 2) as Fragment_Homeworklist)
+                                        .instantiateItem(activity_main_viewpager, 2) as HomeworklistFragment)
                                         .shareFab(mSharedFab)
                                 mSharedFab?.show()
                             }
@@ -191,7 +191,7 @@ class Activity_Main : AppCompatActivity(), Fragment_Timetable.OnSubjectActionReq
         val id = item.itemId
 
         if (id == R.id.action_settings) {
-            val intent = Intent(this, Activity_Settings::class.java)
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
             return true
         }
@@ -200,7 +200,7 @@ class Activity_Main : AppCompatActivity(), Fragment_Timetable.OnSubjectActionReq
     }
 
     override fun onSubjectActionRequest() {
-        Dialog_SubjectActions.newInstance().show(fragmentManager, "SubjectActionsDialog")
+        SubjectActionsDialog.newInstance().show(fragmentManager, "SubjectActionsDialog")
     }
 
     /**
@@ -211,9 +211,9 @@ class Activity_Main : AppCompatActivity(), Fragment_Timetable.OnSubjectActionReq
 
         override fun getItem(position: Int): Fragment =
             when (position) {
-                0 -> Fragment_Examlist()
-                1 -> Fragment_Timetable()
-                2 -> Fragment_Homeworklist()
+                0 -> ExamlistFragment()
+                1 -> TimetableFragment()
+                2 -> HomeworklistFragment()
                 else -> throw Exception(
                         "Something went wrong while loading fragments... position out of bounds?")
             }

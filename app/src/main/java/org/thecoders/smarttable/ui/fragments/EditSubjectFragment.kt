@@ -13,14 +13,14 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.ui.adapters.Adapter_SubjectEditCards
+import org.thecoders.smarttable.ui.adapters.SubjectEditCardAdapter
 import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
 /**
  * A placeholder fragment containing a simple view.
  */
 
-class Fragment_EditSubject : Fragment() {
+class EditSubjectFragment : Fragment() {
 
     private lateinit var mSubjectViewModel: SubjectViewModel
 
@@ -28,7 +28,7 @@ class Fragment_EditSubject : Fragment() {
     private lateinit var mUnbinder: Unbinder
     @BindView(R.id.editsubject_recyclerview) lateinit var mRecyclerView: RecyclerView
 
-    private lateinit var mRecyclerAdapter: Adapter_SubjectEditCards
+    private lateinit var mRecyclerAdapter: SubjectEditCardAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class Fragment_EditSubject : Fragment() {
         val rootView = inflater.inflate(R.layout.fragment_edit_subject, container, false)
 
         mUnbinder = ButterKnife.bind(this, rootView)
-        mRecyclerAdapter = Adapter_SubjectEditCards(mutableListOf(), mSubjectViewModel)
+        mRecyclerAdapter = SubjectEditCardAdapter(mutableListOf(), mSubjectViewModel)
 
         mRecyclerView.layoutManager = LinearLayoutManager(context)
         mRecyclerView.adapter = mRecyclerAdapter

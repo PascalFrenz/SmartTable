@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_edit_subject.*
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.ui.fragments.Fragment_EditSubject
+import org.thecoders.smarttable.ui.fragments.EditSubjectFragment
 
-class Activity_EditSubject : AppCompatActivity() {
+class EditSubjectActivity : AppCompatActivity() {
 
     lateinit var mEditSubjectFragment: Fragment
 
@@ -21,7 +21,7 @@ class Activity_EditSubject : AppCompatActivity() {
             if(savedInstanceState != null)
                 return
 
-            mEditSubjectFragment = Fragment_EditSubject()
+            mEditSubjectFragment = EditSubjectFragment()
             //mEditSubjectFragment.arguments = intent.extras
 
             supportFragmentManager.beginTransaction()

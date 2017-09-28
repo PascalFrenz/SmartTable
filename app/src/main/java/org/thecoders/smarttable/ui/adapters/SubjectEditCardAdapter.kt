@@ -13,7 +13,7 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
 /**
  * Created by frenz on 19.09.2017.
  */
-class Adapter_SubjectEditCards(private var data: MutableList<Subject>, private val mSubjectViewModel: SubjectViewModel) : RecyclerView.Adapter<Adapter_SubjectEditCards.SubjectEditCardViewHolder>() {
+class SubjectEditCardAdapter(private var data: MutableList<Subject>, private val mSubjectViewModel: SubjectViewModel) : RecyclerView.Adapter<SubjectEditCardAdapter.SubjectEditCardViewHolder>() {
 
     inner class SubjectEditCardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         fun bind(position: Int) {
