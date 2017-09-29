@@ -16,10 +16,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnItemClick
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_homeworklist.view.*
 import org.thecoders.smarttable.R
+import org.thecoders.smarttable.data.pojos.Homework
 import org.thecoders.smarttable.ui.activities.CreateHomeworkActivity
+import org.thecoders.smarttable.ui.activities.EditHomeworkActivity
 import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
 
@@ -82,6 +85,20 @@ class HomeworklistFragment : Fragment() {
         super.onDestroy()
         mSharedFab = null
         mUnbinder.unbind()
+    }
+
+    @OnItemClick(R.id.homeworklist_listview)
+    fun onHomeworkSelected(position: Int) {
+        val homework = mHomeworkAdapter.data[position]
+        val intent = Intent(context, EditHomeworkActivity::class.java)
+        intent.putExtra(Homework.ID, homework.id)
+        intent.putExtra(Homework.SUBJECT, homework.subject)
+        intent.putExtra(Homework.TASK, homework.task)
+        intent.putExtra(Homework.START, homework.date_start)
+        intent.putExtra(Homework.DEADLINE, homework.date_deadline)
+        intent.putExtra(Homework.FINISHED, homework.finished)
+        intent.putExtra(Homework.EFFORT, homework.effort)
+        startActivity(intent)
     }
 
     fun shareFab(fab: FloatingActionButton?) {

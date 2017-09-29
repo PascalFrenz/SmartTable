@@ -33,4 +33,14 @@ class Homework(
         sb.append("Effort: $effort").append("\n")
         return sb.toString()
     }
+
+    companion object {
+        const val ID = "homework_id"
+        const val SUBJECT = "homework_subject"
+        const val TASK = "homework_task"
+        const val START = "homework_start"
+        const val DEADLINE = "homework_deadline"
+        const val FINISHED = "homework_finished"
+        const val EFFORT = "homework_effort"
+    }
 }

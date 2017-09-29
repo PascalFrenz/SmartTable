@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_create_exam.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.pojos.Exam
+import org.thecoders.smarttable.ui.dialogs.MyDatePickerDialog
 import org.thecoders.smarttable.ui.fragments.CreateExamFragment
 import org.thecoders.smarttable.viewmodel.ExamViewModel
 
@@ -41,7 +42,7 @@ class CreateExamActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
     }
 
     override fun onDateSet(view: android.widget.DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        mFragment.mDate.setText(DatePicker.getDateSet(dayOfMonth, month, year))
+        mFragment.mDate.setText(MyDatePickerDialog.getDateSet(dayOfMonth, month, year))
     }
 
     override fun onAddExamRequested(exam: Exam) {

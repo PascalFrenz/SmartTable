@@ -54,4 +54,10 @@ class EditSubjectFragment : Fragment() {
 
         return rootView
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mUnbinder.unbind()
+    }
 }

@@ -10,6 +10,7 @@ import android.widget.TimePicker
 import kotlinx.android.synthetic.main.activity_create_homework.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.pojos.Homework
+import org.thecoders.smarttable.ui.dialogs.MyDatePickerDialog
 import org.thecoders.smarttable.ui.dialogs.MyTimePickerDialog
 import org.thecoders.smarttable.ui.fragments.CreateHomeworkFragment
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
@@ -52,7 +53,7 @@ class CreateHomeworkActivity : AppCompatActivity(),
     }
 
     override fun onDateSet(view: android.widget.DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        mFragment.mDeadline.setText(DatePicker.getDateSet(dayOfMonth, month, year))
+        mFragment.mDeadline.setText(MyDatePickerDialog.getDateSet(dayOfMonth, month, year))
     }
 
 

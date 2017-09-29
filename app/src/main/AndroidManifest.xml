@@ -88,6 +88,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thecoders.smarttable.ui.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.activities.EditHomeworkActivity"
+            android:label="@string/title_activity_edit_homework"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.thecoders.smarttable.ui.activities.MainActivity" />
+        </activity>
+        <activity android:name=".ui.activities.EditExamActivity"></activity>
     </application>
 
 </manifest>

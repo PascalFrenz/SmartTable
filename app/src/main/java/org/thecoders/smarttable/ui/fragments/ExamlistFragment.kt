@@ -17,10 +17,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
+import butterknife.OnItemClick
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_examlist.view.*
 import org.thecoders.smarttable.R
+import org.thecoders.smarttable.data.pojos.Exam
 import org.thecoders.smarttable.ui.activities.CreateExamActivity
+import org.thecoders.smarttable.ui.activities.EditExamActivity
 import org.thecoders.smarttable.ui.adapters.ExamAdapter
 import org.thecoders.smarttable.viewmodel.ExamViewModel
 
@@ -85,6 +88,18 @@ class ExamlistFragment : Fragment() {
         super.onDestroy()
         mSharedFab = null
         mUnbinder.unbind()
+    }
+
+    @OnItemClick(value = R.id.examlist_listview)
+    fun onExamSelected(position: Int) {
+        val exam = mExamAdapter.data[position]
+        val intent = Intent(context, EditExamActivity::class.java)
+        intent.putExtra(Exam.ID, exam.id)
+        intent.putExtra(Exam.SUBJECT, exam.subject)
+        intent.putExtra(Exam.TOPIC, exam.topic)
+        intent.putExtra(Exam.DATE, exam.date)
+        intent.putExtra(Exam.GRADE, exam.grade)
+        startActivity(intent)
     }
 
     fun shareFab(fab: FloatingActionButton?) {

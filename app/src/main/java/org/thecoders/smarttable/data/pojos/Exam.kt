@@ -18,4 +18,12 @@ class Exam(
         val topic: String = "NULL",
         val date: Date = Date(),
         val grade: String = "NULL"
-)
+) {
+    companion object {
+        const val ID = "exam_id"
+        const val SUBJECT = "exam_subject"
+        const val TOPIC = "exam_topic"
+        const val DATE = "exam_date"
+        const val GRADE = "exam_grade"
+    }
+}

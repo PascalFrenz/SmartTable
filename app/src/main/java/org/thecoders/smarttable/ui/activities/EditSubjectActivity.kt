@@ -9,7 +9,7 @@ import org.thecoders.smarttable.ui.fragments.EditSubjectFragment
 
 class EditSubjectActivity : AppCompatActivity() {
 
-    lateinit var mEditSubjectFragment: Fragment
+    private lateinit var mEditSubjectFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
