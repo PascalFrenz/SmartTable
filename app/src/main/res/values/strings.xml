@@ -115,6 +115,16 @@
     <string name="title_activity__delete_subject">Activity_DeleteSubject</string>
     <string name="title_activity_edit_homework">EditHomeworkActivity</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="task">Task</string>
+    <string name="subject">Subject</string>
+    <string name="topic">Topic</string>
+    <string name="lbl_btn_set">SET</string>
+    <string name="content_description_edit_icon">Edit Icon</string>
+    <string name="label_hint_date">Date</string>
+    <string name="label_date_start_hint">Start Date</string>
+    <string name="label_hint_deadline">Deadline</string>
+    <string name="label_homework_finished">Homework finished</string>
+    <string name="label_hint_effort">Effort</string>
 </resources>

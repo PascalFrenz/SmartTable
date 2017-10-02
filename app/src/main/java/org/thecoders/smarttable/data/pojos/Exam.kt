@@ -19,6 +19,8 @@ class Exam(
         val date: Date = Date(),
         val grade: String = "NULL"
 ) {
+
+    //Holds String-ID's for all fields
     companion object {
         const val ID = "exam_id"
         const val SUBJECT = "exam_subject"

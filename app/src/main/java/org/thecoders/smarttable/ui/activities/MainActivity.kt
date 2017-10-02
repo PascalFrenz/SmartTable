@@ -1,5 +1,8 @@
 package org.thecoders.smarttable.ui.activities
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -13,15 +16,30 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.DatePicker
+import android.widget.TimePicker
 import kotlinx.android.synthetic.main.activity_main.*
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.AppDatabase
-import org.thecoders.smarttable.ui.dialogs.SubjectActionsDialog
+import org.thecoders.smarttable.data.pojos.Exam
+import org.thecoders.smarttable.data.pojos.Homework
+import org.thecoders.smarttable.ui.adapters.ExamAdapter
+import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
+import org.thecoders.smarttable.ui.dialogs.*
 import org.thecoders.smarttable.ui.fragments.ExamlistFragment
 import org.thecoders.smarttable.ui.fragments.HomeworklistFragment
 import org.thecoders.smarttable.ui.fragments.TimetableFragment
+import org.thecoders.smarttable.viewmodel.ExamViewModel
+import org.thecoders.smarttable.viewmodel.HomeworkViewModel
+import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
-class MainActivity : AppCompatActivity(), TimetableFragment.OnSubjectActionRequest {
+class MainActivity : AppCompatActivity(),
+        TimetableFragment.OnSubjectActionRequest,
+        ExamAdapter.OnExamEditClickListener,
+        HomeworkAdapter.OnHomeworkEditClickListener,
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener {
+
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -32,15 +50,16 @@ class MainActivity : AppCompatActivity(), TimetableFragment.OnSubjectActionReque
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
 
-    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private lateinit var mSectionsPagerAdapter: SectionsPagerAdapter
     private var mCurrentPage: Int = 0
     private var mLastPage: Int = 0
 
     private var mSharedFab: FloatingActionButton? = null
 
-    /**
-     * The [ViewPager] that will host the section contents.
-     */
+    private lateinit var mSubjectViewModel: SubjectViewModel
+    private lateinit var mExamViewModel: ExamViewModel
+    private lateinit var mHomeworkViewModel: HomeworkViewModel
+
 
     companion object {
         private val LOG_TAG = MainActivity::class.java.simpleName
@@ -56,6 +75,10 @@ class MainActivity : AppCompatActivity(), TimetableFragment.OnSubjectActionReque
         supportActionBar?.elevation = 0f
 
         setContentView(R.layout.activity_main)
+
+        mSubjectViewModel = ViewModelProviders.of(this).get(SubjectViewModel::class.java)
+        mExamViewModel = ViewModelProviders.of(this).get(ExamViewModel::class.java)
+        mHomeworkViewModel = ViewModelProviders.of(this).get(HomeworkViewModel::class.java)
 
         if (savedInstanceState != null) {
             mCurrentPage = savedInstanceState.getInt(STATE_PAGE_ID)
@@ -203,6 +226,78 @@ class MainActivity : AppCompatActivity(), TimetableFragment.OnSubjectActionReque
         SubjectActionsDialog.newInstance().show(fragmentManager, "SubjectActionsDialog")
     }
 
+    private lateinit var mEditExamDialog: EditExamDialog
+
+    override fun onExamEditRequest(exam: Exam) {
+        val ft = supportFragmentManager.beginTransaction()
+        val prev = supportFragmentManager.findFragmentByTag("editExamDialog")
+        if(prev != null)
+            ft.remove(prev)
+        ft.addToBackStack(null)
+
+        //Pack the exam that should be edited into a bundle
+        val bundle = Bundle()
+        bundle.putLong(Exam.ID, exam.id)
+        bundle.putString(Exam.SUBJECT, exam.subject)
+        bundle.putString(Exam.TOPIC, exam.topic)
+        bundle.putSerializable(Exam.DATE, exam.date)
+        bundle.putString(Exam.GRADE, exam.grade)
+
+        //Note: Bundle is passed here!
+        mEditExamDialog = EditExamDialog.newInstance(bundle,mSubjectViewModel, mExamViewModel)
+        mEditExamDialog.show(ft, "editExamDialog")
+    }
+
+    private lateinit var mEditHomeworkDialog: EditHomeworkDialog
+
+    override fun onHomeworkEditRequest(homework: Homework) {
+        val ft = supportFragmentManager.beginTransaction()
+        val prev = supportFragmentManager.findFragmentByTag("editHomeworkFragment")
+        if (prev != null)
+            ft.remove(prev)
+        ft.addToBackStack(null)
+
+        val bundle = Bundle()
+        bundle.putLong(Homework.ID, homework.id)
+        bundle.putString(Homework.SUBJECT, homework.subject)
+        bundle.putString(Homework.TASK, homework.task)
+        bundle.putSerializable(Homework.START, homework.date_start)
+        bundle.putSerializable(Homework.DEADLINE, homework.date_deadline)
+        bundle.putBoolean(Homework.FINISHED, homework.finished)
+        bundle.putString(Homework.EFFORT, homework.effort)
+
+        mEditHomeworkDialog = EditHomeworkDialog.newInstance(bundle, mSubjectViewModel, mHomeworkViewModel)
+        mEditHomeworkDialog.show(ft, "editHomeworkFragment")
+    }
+
+    override fun onTimeSet(timePicker: TimePicker, hour: Int, minute: Int) {
+        when (timePicker.tag) {
+            "EditHomework_timeEffortDialog" ->
+                mEditHomeworkDialog.mEffort
+                        .setText(MyTimePickerDialog.getTimeSet(hour, minute))
+        }
+    }
+
+    override fun onDateSet(datePicker: DatePicker, year: Int, month: Int, day: Int) {
+        when (datePicker.tag) {
+            "EditExam_datePicker" ->
+                mEditExamDialog.mDate
+                        .setText(MyDatePickerDialog.getDateSet(day, month, year))
+
+            "EditHomework_dateStartDialog" ->
+                mEditHomeworkDialog.mDateStart
+                        .setText(MyDatePickerDialog.getDateSet(day, month, year))
+
+            "EditHomework_dateDeadlineDialog" ->
+                mEditHomeworkDialog.mDeadline
+                        .setText(MyDatePickerDialog.getDateSet(day, month, year))
+        }
+    }
+
+
+
+
+
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -211,9 +306,9 @@ class MainActivity : AppCompatActivity(), TimetableFragment.OnSubjectActionReque
 
         override fun getItem(position: Int): Fragment =
             when (position) {
-                0 -> ExamlistFragment()
+                0 -> ExamlistFragment.newInstance(mExamViewModel)
                 1 -> TimetableFragment()
-                2 -> HomeworklistFragment()
+                2 -> HomeworklistFragment.newInstance(mHomeworkViewModel)
                 else -> throw Exception(
                         "Something went wrong while loading fragments... position out of bounds?")
             }

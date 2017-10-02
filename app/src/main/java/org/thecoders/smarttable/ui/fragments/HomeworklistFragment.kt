@@ -1,7 +1,6 @@
 package org.thecoders.smarttable.ui.fragments
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -16,13 +15,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnItemClick
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_homeworklist.view.*
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.data.pojos.Homework
 import org.thecoders.smarttable.ui.activities.CreateHomeworkActivity
-import org.thecoders.smarttable.ui.activities.EditHomeworkActivity
 import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
 
@@ -37,7 +33,7 @@ class HomeworklistFragment : Fragment() {
 
     private lateinit var mHomeworkViewModel: HomeworkViewModel
     private lateinit var mHomeworkAdapter: HomeworkAdapter
-    var mSharedFab: FloatingActionButton? = null
+    private var mSharedFab: FloatingActionButton? = null
 
     private lateinit var mUnbinder: Unbinder
     @BindView(R.id.homeworklist_listview) lateinit var mHomeworkListView: RecyclerView
@@ -45,11 +41,12 @@ class HomeworklistFragment : Fragment() {
 
     companion object {
         private val LOG_TAG = HomeworklistFragment::class.java.simpleName
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mHomeworkViewModel = ViewModelProviders.of(this).get(HomeworkViewModel::class.java)
+        fun newInstance(homeworkViewModel: HomeworkViewModel): HomeworklistFragment {
+            val homeworklistFragment = HomeworklistFragment()
+            homeworklistFragment.mHomeworkViewModel = homeworkViewModel
+            return homeworklistFragment
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -57,7 +54,15 @@ class HomeworklistFragment : Fragment() {
 
         mUnbinder = ButterKnife.bind(this, rootView)
 
-        mHomeworkAdapter = HomeworkAdapter(activity, mutableListOf(), true)
+        val onHomeworkEditClickCallback =
+                try {
+                    activity as HomeworkAdapter.OnHomeworkEditClickListener
+                } catch (e: ClassCastException) {
+                    throw ClassCastException(activity.toString() +
+                            " must implement HomeworkAdapter.OnHomeworkEditClickListener!")
+                }
+
+        mHomeworkAdapter = HomeworkAdapter(activity, mutableListOf(), true, onHomeworkEditClickCallback)
 
         mHomeworkViewModel.homeworkList.observe(this, Observer {
             if (it != null) {
@@ -85,20 +90,6 @@ class HomeworklistFragment : Fragment() {
         super.onDestroy()
         mSharedFab = null
         mUnbinder.unbind()
-    }
-
-    @OnItemClick(R.id.homeworklist_listview)
-    fun onHomeworkSelected(position: Int) {
-        val homework = mHomeworkAdapter.data[position]
-        val intent = Intent(context, EditHomeworkActivity::class.java)
-        intent.putExtra(Homework.ID, homework.id)
-        intent.putExtra(Homework.SUBJECT, homework.subject)
-        intent.putExtra(Homework.TASK, homework.task)
-        intent.putExtra(Homework.START, homework.date_start)
-        intent.putExtra(Homework.DEADLINE, homework.date_deadline)
-        intent.putExtra(Homework.FINISHED, homework.finished)
-        intent.putExtra(Homework.EFFORT, homework.effort)
-        startActivity(intent)
     }
 
     fun shareFab(fab: FloatingActionButton?) {

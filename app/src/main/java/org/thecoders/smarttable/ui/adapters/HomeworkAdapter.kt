@@ -2,7 +2,6 @@ package org.thecoders.smarttable.ui.adapters
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,8 +33,13 @@ import java.util.*
  * constructor.
 
  */
-class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val enableEdit: Boolean) :
+class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val enableEdit: Boolean,
+                      val callback: OnHomeworkEditClickListener) :
         RecyclerView.Adapter<HomeworkAdapter.HomeworkViewHolder>() {
+
+    interface OnHomeworkEditClickListener {
+        fun onHomeworkEditRequest(homework: Homework)
+    }
 
     companion object {
         private val LOG_TAG = HomeworkAdapter::class.java.simpleName
@@ -46,7 +50,7 @@ class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val
             val mSubject: TextView = itemView.findViewById(R.id.item_homework_subject)
             val mTask: TextView = itemView.findViewById(R.id.item_homework_task)
             val mDeadline: TextView = itemView.findViewById(R.id.item_homework_deadline)
-            val mDeleteIcon: ImageView = itemView.findViewById(R.id.item_homework_delete)
+            val mEditIcon: ImageView = itemView.findViewById(R.id.item_homework_edit)
 
             val homework = data[position]
 
@@ -71,10 +75,10 @@ class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val
             mDeadline.text = "$timeToDeadline days left ($deadline)"
 
             if (enableEdit) {
-                mDeleteIcon.setOnClickListener { displayDeleteDialog(homework, context) }
+                mEditIcon.setOnClickListener { callback.onHomeworkEditRequest(homework) }
             } else {
-                mDeleteIcon.isClickable = false
-                mDeleteIcon.visibility = View.INVISIBLE
+                mEditIcon.isClickable = false
+                mEditIcon.visibility = View.INVISIBLE
             }
         }
     }
@@ -92,14 +96,6 @@ class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val
     override fun onBindViewHolder(holder: HomeworkViewHolder, position: Int) = holder.bind(position)
 
     override fun getItemCount(): Int = data.count()
-
-
-    private fun displayDeleteDialog(homework: Homework, context: Context) {
-        val confirmDeleteDialog = ConfirmDeleteDialog()
-        confirmDeleteDialog.objectToDelete = homework
-        confirmDeleteDialog.objectAdapter = this
-        confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)
-    }
 
     fun alterItems(newList: List<Homework>) {
         data = newList.toMutableList()

@@ -39,10 +39,10 @@ class DateConverter {
 
     //The difference is returned in days between start and end
     fun getDifference(start: String, end: String): Int {
-        val date_start: Date = dateFormat.parse(start)
-        val date_end: Date = dateFormat.parse(end)
+        val dateStart: Date = dateFormat.parse(start)
+        val dateEnd: Date = dateFormat.parse(end)
 
-        val difference = (date_end.time - date_start.time) / 1000 / 60 / 60 / 24
+        val difference = (dateEnd.time - dateStart.time) / 1000 / 60 / 60 / 24
 
         return difference.toInt()
     }

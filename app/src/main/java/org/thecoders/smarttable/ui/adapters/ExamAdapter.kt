@@ -2,7 +2,6 @@ package org.thecoders.smarttable.ui.adapters
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,15 +11,19 @@ import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
-import org.thecoders.smarttable.ui.dialogs.ConfirmDeleteDialog
 import java.util.*
 
 /**
  * Created by frenz on 24.06.2017.
  */
 
-class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableEdit: Boolean) :
+class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableEdit: Boolean,
+                  val callback: OnExamEditClickListener) :
         RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
+
+    interface OnExamEditClickListener {
+        fun onExamEditRequest(exam: Exam)
+    }
 
     companion object {
         private val LOG_TAG = ExamAdapter::class.java.simpleName
@@ -32,7 +35,7 @@ class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableE
             val mSubject: TextView = itemView.findViewById(R.id.item_exam_subject)
             val mTopic: TextView = itemView.findViewById(R.id.item_exam_topic)
             val mDate: TextView = itemView.findViewById(R.id.item_exam_date)
-            val mDeleteIcon: ImageView  = itemView.findViewById(R.id.item_exam_delete)
+            val mEditIcon: ImageView = itemView.findViewById(R.id.item_exam_edit)
 
             //Fetch the item from the data
             val exam = data[position]
@@ -56,13 +59,12 @@ class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableE
             mDate.text = "$timeToExam days left ($examDate)"
 
             if (enableEdit) {
-                mDeleteIcon.setOnClickListener { displayDeleteDialog(exam, context) }
+                mEditIcon.setOnClickListener { callback.onExamEditRequest(exam) }
             } else {
-                mDeleteIcon.isClickable = false
-                mDeleteIcon.visibility = View.INVISIBLE
+                mEditIcon.isClickable = false
+                mEditIcon.visibility = View.INVISIBLE
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExamViewHolder {
@@ -78,14 +80,6 @@ class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableE
     override fun onBindViewHolder(holder: ExamViewHolder, position: Int) = holder.bind(position)
 
     override fun getItemCount(): Int = data.count()
-
-
-    private fun displayDeleteDialog(exam: Exam, context: Context) {
-        val confirmDeleteDialog = ConfirmDeleteDialog()
-        confirmDeleteDialog.objectToDelete = exam
-        confirmDeleteDialog.objectAdapter = this
-        confirmDeleteDialog.show((context as AppCompatActivity).supportFragmentManager, LOG_TAG)
-    }
 
     fun alterItems(newList: List<Exam>) {
         data = newList.toMutableList()

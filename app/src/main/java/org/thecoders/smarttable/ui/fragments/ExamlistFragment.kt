@@ -2,7 +2,6 @@ package org.thecoders.smarttable.ui.fragments
 
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -17,13 +16,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnItemClick
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_examlist.view.*
 import org.thecoders.smarttable.R
-import org.thecoders.smarttable.data.pojos.Exam
 import org.thecoders.smarttable.ui.activities.CreateExamActivity
-import org.thecoders.smarttable.ui.activities.EditExamActivity
 import org.thecoders.smarttable.ui.adapters.ExamAdapter
 import org.thecoders.smarttable.viewmodel.ExamViewModel
 
@@ -35,7 +31,7 @@ class ExamlistFragment : Fragment() {
 
     private lateinit var mExamViewModel: ExamViewModel
     private lateinit var mExamAdapter: ExamAdapter
-    var mSharedFab: FloatingActionButton? = null
+    private var mSharedFab: FloatingActionButton? = null
 
     private lateinit var mUnbinder: Unbinder
     @BindView(R.id.examlist_listview) lateinit var mExamListView: RecyclerView
@@ -43,11 +39,11 @@ class ExamlistFragment : Fragment() {
 
     companion object {
         private val LOG_TAG = ExamlistFragment::class.java.simpleName
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mExamViewModel = ViewModelProviders.of(this).get(ExamViewModel::class.java)
+        fun newInstance(examViewModel: ExamViewModel): ExamlistFragment {
+            val examlistFragment = ExamlistFragment()
+            examlistFragment.mExamViewModel = examViewModel
+            return examlistFragment
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -55,8 +51,15 @@ class ExamlistFragment : Fragment() {
 
         mUnbinder = ButterKnife.bind(this, rootView)
 
+        val onExamEditClickCallback =
+                try {
+                    activity as ExamAdapter.OnExamEditClickListener
+                } catch (e: ClassCastException) {
+                    throw ClassCastException(activity.toString() + " must implement ExamAdapter.OnExamEditClickListener!")
+                }
+
         //Create the Adapter
-        mExamAdapter = ExamAdapter(activity, mutableListOf(), true)
+        mExamAdapter = ExamAdapter(activity, mutableListOf(), true, onExamEditClickCallback)
 
         //Let the Adapter change upon change in the ViewModels data
         mExamViewModel.examList.observe(this, Observer {
@@ -68,11 +71,11 @@ class ExamlistFragment : Fragment() {
         //Set the ListViews adapter
         mExamListView.adapter = mExamAdapter
 
+
         //Set the ListViews LayoutManager
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = LinearLayoutManager.VERTICAL
         mExamListView.layoutManager = layoutManager
-
 
 
         mSwipeRefreshLayout.setOnRefreshListener {
@@ -88,18 +91,6 @@ class ExamlistFragment : Fragment() {
         super.onDestroy()
         mSharedFab = null
         mUnbinder.unbind()
-    }
-
-    @OnItemClick(value = R.id.examlist_listview)
-    fun onExamSelected(position: Int) {
-        val exam = mExamAdapter.data[position]
-        val intent = Intent(context, EditExamActivity::class.java)
-        intent.putExtra(Exam.ID, exam.id)
-        intent.putExtra(Exam.SUBJECT, exam.subject)
-        intent.putExtra(Exam.TOPIC, exam.topic)
-        intent.putExtra(Exam.DATE, exam.date)
-        intent.putExtra(Exam.GRADE, exam.grade)
-        startActivity(intent)
     }
 
     fun shareFab(fab: FloatingActionButton?) {

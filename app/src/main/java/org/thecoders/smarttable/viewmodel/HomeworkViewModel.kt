@@ -25,12 +25,25 @@ class HomeworkViewModel constructor(application: Application) : AndroidViewModel
 
     fun addHomework(homework: Homework) =
             AsyncTask.execute({
-                db.homeworkModel().insertOrUpdate(homework)
+                db.homeworkModel().insert(homework)
             })
 
     fun deleteHomework(homework: Homework) =
             AsyncTask.execute({
                 db.homeworkModel().delete(homework)
+            })
+
+    fun updateHomework(homework: Homework) =
+            AsyncTask.execute({
+                db.homeworkModel().updateById(
+                        homework.id,
+                        homework.subject,
+                        homework.task,
+                        homework.date_start,
+                        homework.date_deadline,
+                        homework.finished,
+                        homework.effort
+                )
             })
 }
 

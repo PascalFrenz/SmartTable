@@ -35,7 +35,7 @@ class CreateHomeworkFragment : Fragment() {
     }
 
     private lateinit var mSubjectViewModel: SubjectViewModel
-    private lateinit var mLessonSubjectAdapter: ArrayAdapter<String>
+    private lateinit var mSubjectAdapter: ArrayAdapter<String>
     private lateinit var mSubjects: List<String>
 
     @BindView(R.id.createhomework_subject) lateinit var mSubject: Spinner
@@ -59,25 +59,25 @@ class CreateHomeworkFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_create_homework, container, false)
 
-        val rootView = inflater?.inflate(R.layout.fragment_create_homework, container, false) as View
         mUnbinder = ButterKnife.bind(this, rootView)
 
-        mLessonSubjectAdapter = ArrayAdapter(
+        mSubjectAdapter = ArrayAdapter(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
                 mutableListOf()
         )
 
-        mSubject.adapter = mLessonSubjectAdapter
+        mSubject.adapter = mSubjectAdapter
 
         mSubjectViewModel.subjectNamesList.observe(this, Observer {
             if (it != null) {
                 mSubjects = it
-                mLessonSubjectAdapter.clear()
-                mLessonSubjectAdapter.addAll(mSubjects)
+                mSubjectAdapter.clear()
+                mSubjectAdapter.addAll(mSubjects)
             }
         })
 

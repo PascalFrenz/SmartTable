@@ -24,11 +24,22 @@ class ExamViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addExam(exam: Exam) =
             AsyncTask.execute {
-                db.examModel().insertOrUpdate(exam)
+                db.examModel().insert(exam)
             }
 
     fun deleteExam(exam: Exam) =
             AsyncTask.execute {
                 db.examModel().delete(exam)
+            }
+
+    fun updateExam(exam: Exam) =
+            AsyncTask.execute{
+                db.examModel().updateById(
+                        exam.id,
+                        exam.subject,
+                        exam.topic,
+                        exam.date,
+                        exam.grade
+                )
             }
 }
