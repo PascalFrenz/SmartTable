@@ -15,23 +15,39 @@ import javax.inject.Inject
 class ExamViewModel(application: Application) : AndroidViewModel(application) {
 
     @Inject lateinit var db: AppDatabase
+
+    /**
+     * Contains a reference to the data in the DB
+     */
     val examList: LiveData<List<Exam>>
 
     init {
+        //Get the AppDatabase via Dagger 2
         (application as SmartTableApplication).appComponent.inject(this)
+
+        //Loads data into the ViewModel
         examList = db.examModel().loadExams()
     }
 
+    /**
+     * Adds an Exam-Object to the database
+     */
     fun addExam(exam: Exam) =
             AsyncTask.execute {
                 db.examModel().insert(exam)
             }
 
+    /**
+     * Deletes a specified Exam object from db if present
+     */
     fun deleteExam(exam: Exam) =
             AsyncTask.execute {
                 db.examModel().delete(exam)
             }
 
+    /**
+     * Updates an existing Exam-Object
+     */
     fun updateExam(exam: Exam) =
             AsyncTask.execute{
                 db.examModel().updateById(

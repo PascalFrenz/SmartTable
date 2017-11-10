@@ -11,6 +11,9 @@ import javax.inject.Inject
 
 /**
  * Created by frenz on 12.06.2017.
+ *
+ * For Documentation, see
+ * @See ExamViewModel
  */
 
 class HomeworkViewModel constructor(application: Application) : AndroidViewModel(application) {
