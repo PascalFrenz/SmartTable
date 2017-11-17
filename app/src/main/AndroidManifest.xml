@@ -98,7 +98,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.thecoders.smarttable.ui.activities.MainActivity" />
         </activity>
-        <activity android:name=".ui.activities.EditExamActivity"></activity>
     </application>
 
 </manifest>
