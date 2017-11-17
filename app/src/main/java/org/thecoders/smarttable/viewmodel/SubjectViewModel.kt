@@ -11,6 +11,9 @@ import javax.inject.Inject
 
 /**
  * Created by frenz on 24.06.2017.
+ *
+ * For documentation,
+ * @see ExamViewModel
  */
 
 class SubjectViewModel(application: Application) : AndroidViewModel(application) {

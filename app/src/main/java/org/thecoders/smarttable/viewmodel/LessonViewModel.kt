@@ -17,14 +17,38 @@ class LessonViewModel(application: Application) : AndroidViewModel(application) 
 
 
     @Inject lateinit var db: AppDatabase
+
+    //Init all the different day-variables
+
+    /**
+     * contains all lessons on monday
+     */
     val mondayLessons: LiveData<List<LessonMon>>
+
+    /**
+     * contains all lessons on tuesday
+     */
     val tuesdayLessons: LiveData<List<LessonTue>>
+
+    /**
+     * contains all lessons on wednesday
+     */
     val wednesdayLessons: LiveData<List<LessonWed>>
+
+    /**
+     * contains all lessons on thursday
+     */
     val thursdayLessons: LiveData<List<LessonThu>>
+
+    /**
+     * contains all lessons on friday
+     */
     val fridayLessons: LiveData<List<LessonFri>>
 
     init {
         (application as SmartTableApplication).appComponent.inject(this)
+
+        //Load all data from db to ViewModel
         mondayLessons = db.timetableModel().loadMondayLessons()
         tuesdayLessons = db.timetableModel().loadTuesdayLessons()
         wednesdayLessons = db.timetableModel().loadWednesdayLessons()
