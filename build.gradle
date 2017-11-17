@@ -4,11 +4,11 @@ buildscript {
 
     //Version numbers of dependencies
     ext {
-        kotlin_version = "1.1.51"
+        kotlin_version = "1.1.60"
         supportLibs_version = "26.1.0"
-        lifecycle_version = "1.0.0-alpha9-1"
-        room_version = "1.0.0-alpha9-1"
-        rxjava_version = "1.0.0-alpha9-1"
+        lifecycle_version = "1.0.0"
+        room_version = "1.0.0"
+        rxjava_version = "1.0.0"
         gradle_version = "2.3.3"
         butterknife_version = "8.6.0"
         dagger_version = "2.11"
