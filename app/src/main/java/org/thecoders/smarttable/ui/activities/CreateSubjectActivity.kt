@@ -12,9 +12,15 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
 /**
  * Created by frenz on 29.06.2017.
+ *
+ * Host-Activity for CreateSubjectFragment
+ * Also holds an instance of SubjectViewModel for communication with the database.
+ *
+ * @see SubjectViewModel
  */
 class CreateSubjectActivity : AppCompatActivity(), CreateSubjectFragment.OnAddSubjectPressedListener {
 
+    private lateinit var mFragment: CreateSubjectFragment
     private lateinit var mSubjectViewModel: SubjectViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,12 +33,11 @@ class CreateSubjectActivity : AppCompatActivity(), CreateSubjectFragment.OnAddSu
             if(savedInstanceState != null)
                 return
 
-            val createLessonFragment = CreateSubjectFragment()
-
-            createLessonFragment.arguments = intent.extras
+            mFragment = CreateSubjectFragment()
+            mFragment.arguments = intent.extras
 
             supportFragmentManager.beginTransaction()
-                    .add(R.id.activity_createsubject_content, createLessonFragment)
+                    .add(R.id.activity_createsubject_content, mFragment)
                     .commit()
         }
     }

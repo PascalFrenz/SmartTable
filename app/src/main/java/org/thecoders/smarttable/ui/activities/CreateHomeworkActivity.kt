@@ -15,6 +15,15 @@ import org.thecoders.smarttable.ui.dialogs.MyTimePickerDialog
 import org.thecoders.smarttable.ui.fragments.CreateHomeworkFragment
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
 
+/**
+ * Created by Pascal Frenz
+ *
+ * Host-Activity for CreateHomeworkFragment
+ * Also contains an instance fo HomeworkViewModel for communication with the database
+ *
+ * @see HomeworkViewModel
+ */
+
 class CreateHomeworkActivity : AppCompatActivity(),
         TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener,
         CreateHomeworkFragment.OnAddHomeworkPressedListener {

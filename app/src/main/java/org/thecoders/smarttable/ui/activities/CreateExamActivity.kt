@@ -14,11 +14,23 @@ import org.thecoders.smarttable.viewmodel.ExamViewModel
 
 /**
  * Created by frenz on 02.07.2017.
+ *
+ * Host-Activity for CreateExamFragment.
+ * Also contains a reference to the database via mExamViewModel.
+ *
+ * @see ExamViewModel
  */
 
 class CreateExamActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener, CreateExamFragment.OnAddExamPressedListener {
 
+    /**
+     * Contains all UI elements that the user interact with.
+     */
     private lateinit var mFragment: CreateExamFragment
+
+    /**
+     * Provides an interface for communicating with the database.
+     */
     private lateinit var mExamViewModel: ExamViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +56,7 @@ class CreateExamActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
     override fun onDateSet(view: android.widget.DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         mFragment.mDate.setText(MyDatePickerDialog.getDateSet(dayOfMonth, month, year))
     }
+
 
     override fun onAddExamRequested(exam: Exam) {
         mExamViewModel.addExam(exam)
