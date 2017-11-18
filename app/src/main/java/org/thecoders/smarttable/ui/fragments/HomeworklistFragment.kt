@@ -21,6 +21,7 @@ import org.thecoders.smarttable.R
 import org.thecoders.smarttable.ui.activities.CreateHomeworkActivity
 import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
+import java.lang.ref.WeakReference
 
 /**
  * Created by Pascal on 23.03.2016.
@@ -56,13 +57,13 @@ class HomeworklistFragment : Fragment() {
 
         val onHomeworkEditClickCallback =
                 try {
-                    activity as HomeworkAdapter.OnHomeworkEditClickListener
+                    activity as HomeworkAdapter.OnHomeworkAdapterActionListener
                 } catch (e: ClassCastException) {
                     throw ClassCastException(activity.toString() +
-                            " must implement HomeworkAdapter.OnHomeworkEditClickListener!")
+                            " must implement HomeworkAdapter.OnHomeworkAdapterActionListener!")
                 }
 
-        mHomeworkAdapter = HomeworkAdapter(activity, mutableListOf(), true, onHomeworkEditClickCallback)
+        mHomeworkAdapter = HomeworkAdapter(WeakReference(activity), mutableListOf(), true, onHomeworkEditClickCallback)
 
         mHomeworkViewModel.homeworkList.observe(this, Observer {
             if (it != null) {

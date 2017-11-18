@@ -13,6 +13,7 @@ import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Homework
 import org.thecoders.smarttable.ui.dialogs.ConfirmDeleteDialog
+import java.lang.ref.WeakReference
 import java.util.*
 
 /**
@@ -33,12 +34,33 @@ import java.util.*
  * constructor.
 
  */
-class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val enableEdit: Boolean,
-                      val callback: OnHomeworkEditClickListener) :
+class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList<Homework>, val enableEdit: Boolean,
+                      val callback: OnHomeworkAdapterActionListener) :
         RecyclerView.Adapter<HomeworkAdapter.HomeworkViewHolder>() {
 
-    interface OnHomeworkEditClickListener {
+    private val context: Context? by lazy(weakContext::get)
+
+    /**
+     * This interface is responsible for handling UI actions triggered by the user to prevent
+     * context leaks of some kind.
+     */
+    interface OnHomeworkAdapterActionListener {
+
+        /**
+         * This method forwards an edit request from the adapter to the hosting activity.
+         *
+         * @see org.thecoders.smarttable.ui.activities.MainActivity.onHomeworkEditRequest
+         */
         fun onHomeworkEditRequest(homework: Homework)
+
+        /**
+         * This method forwards a delete request for the given homework to the hosting activity.
+         * The activity then opens up a new ConfirmDeleteDialog.
+         *
+         * @see ConfirmDeleteDialog
+         * @see org.thecoders.smarttable.ui.activities.MainActivity.onHomeworkDeleteRequest
+         */
+        fun onHomeworkDeleteRequest(homework: Homework, adapter: HomeworkAdapter)
     }
 
     companion object {
@@ -74,11 +96,21 @@ class HomeworkAdapter(val context: Context, var data: MutableList<Homework>, val
             mTask.text = "${homework.task} (${homework.effort})"
             mDeadline.text = "$timeToDeadline days left ($deadline)"
 
+
+            //When editing is enabled, pass an edit request up to
+            //the hosting activity
             if (enableEdit) {
                 mEditIcon.setOnClickListener { callback.onHomeworkEditRequest(homework) }
             } else {
                 mEditIcon.isClickable = false
                 mEditIcon.visibility = View.INVISIBLE
+            }
+
+            //Implementing the delete feature here and pass a delete request up to
+            //the hosting activity
+            itemView.setOnLongClickListener {
+                callback.onHomeworkDeleteRequest(homework, this@HomeworkAdapter)
+                return@setOnLongClickListener true
             }
         }
     }

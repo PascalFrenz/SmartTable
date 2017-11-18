@@ -36,7 +36,7 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
 class MainActivity : AppCompatActivity(),
         TimetableFragment.OnSubjectActionRequest,
         ExamAdapter.OnExamEditClickListener,
-        HomeworkAdapter.OnHomeworkEditClickListener,
+        HomeworkAdapter.OnHomeworkAdapterActionListener,
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
 
@@ -268,6 +268,20 @@ class MainActivity : AppCompatActivity(),
 
         mEditHomeworkDialog = EditHomeworkDialog.newInstance(bundle, mSubjectViewModel, mHomeworkViewModel)
         mEditHomeworkDialog.show(ft, "editHomeworkFragment")
+    }
+
+
+    override fun onHomeworkDeleteRequest(homework: Homework, adapter: HomeworkAdapter) {
+        val ft = supportFragmentManager.beginTransaction()
+        val prev = supportFragmentManager.findFragmentByTag("confirmDeleteDialog")
+        if(prev != null)
+            ft.remove(prev)
+        ft.addToBackStack(null)
+
+        val delDialog = ConfirmDeleteDialog()
+        delDialog.objectAdapter = adapter
+        delDialog.objectToDelete = homework
+        delDialog.show(ft, "confirmDeleteDialog")
     }
 
     override fun onTimeSet(timePicker: TimePicker, hour: Int, minute: Int) {
