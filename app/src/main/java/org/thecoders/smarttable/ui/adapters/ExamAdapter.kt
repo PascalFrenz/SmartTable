@@ -11,18 +11,22 @@ import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
+import java.lang.ref.WeakReference
 import java.util.*
 
 /**
  * Created by frenz on 24.06.2017.
  */
 
-class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableEdit: Boolean,
+class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exam>, val enableEdit: Boolean,
                   val callback: OnExamEditClickListener) :
         RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
 
+    val context: Context? by lazy(weakContext::get)
+
     interface OnExamEditClickListener {
         fun onExamEditRequest(exam: Exam)
+        fun onExamDeleteRequest(exam: Exam, adapter: ExamAdapter)
     }
 
     companion object {
@@ -63,6 +67,11 @@ class ExamAdapter(val context: Context, var data: MutableList<Exam>, val enableE
             } else {
                 mEditIcon.isClickable = false
                 mEditIcon.visibility = View.INVISIBLE
+            }
+
+            itemView.setOnLongClickListener {
+                callback.onExamDeleteRequest(exam, this@ExamAdapter)
+                return@setOnLongClickListener true
             }
         }
     }

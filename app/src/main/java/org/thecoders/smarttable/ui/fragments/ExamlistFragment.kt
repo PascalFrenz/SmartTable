@@ -22,6 +22,7 @@ import org.thecoders.smarttable.R
 import org.thecoders.smarttable.ui.activities.CreateExamActivity
 import org.thecoders.smarttable.ui.adapters.ExamAdapter
 import org.thecoders.smarttable.viewmodel.ExamViewModel
+import java.lang.ref.WeakReference
 
 
 /**
@@ -59,7 +60,7 @@ class ExamlistFragment : Fragment() {
                 }
 
         //Create the Adapter
-        mExamAdapter = ExamAdapter(activity, mutableListOf(), true, onExamEditClickCallback)
+        mExamAdapter = ExamAdapter(WeakReference(activity), mutableListOf(), true, onExamEditClickCallback)
 
         //Let the Adapter change upon change in the ViewModels data
         mExamViewModel.examList.observe(this, Observer {

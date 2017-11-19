@@ -248,6 +248,19 @@ class MainActivity : AppCompatActivity(),
         mEditExamDialog.show(ft, "editExamDialog")
     }
 
+    override fun onExamDeleteRequest(exam: Exam, adapter: ExamAdapter) {
+        val ft = supportFragmentManager.beginTransaction()
+        val prev = supportFragmentManager.findFragmentByTag("confirmDeleteDialog")
+        if(prev != null)
+            ft.remove(prev)
+        ft.addToBackStack(null)
+
+        val delDialog = ConfirmDeleteDialog()
+        delDialog.objectAdapter = adapter
+        delDialog.objectToDelete = exam
+        delDialog.show(ft, "confirmDeleteDialog")
+    }
+
     private lateinit var mEditHomeworkDialog: EditHomeworkDialog
 
     override fun onHomeworkEditRequest(homework: Homework) {
