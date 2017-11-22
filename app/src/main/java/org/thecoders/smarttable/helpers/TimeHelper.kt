@@ -31,9 +31,9 @@ class TimeHelper {
         fun addTime(time: String, minutes: String) : String {
             val minutesToAdd = minutes.toInt()
 
-            val time_hours = time.split(":")[0].toInt()
-            val time_minutes = time.split(":")[1].toInt() + minutesToAdd
-            val newTime = mutableListOf(time_hours, time_minutes)
+            val hours = time.split(":")[0].toInt()
+            val minutes = time.split(":")[1].toInt() + minutesToAdd
+            val newTime = mutableListOf(hours, minutes)
 
             while(newTime[1] >= 60) {
                 newTime[0] += 1

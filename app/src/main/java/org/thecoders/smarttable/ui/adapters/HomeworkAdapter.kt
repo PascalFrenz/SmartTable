@@ -41,29 +41,6 @@ class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList
 
     private val context: Context? by lazy(weakContext::get)
 
-    /**
-     * This interface is responsible for handling UI actions triggered by the user to prevent
-     * context leaks of some kind.
-     */
-    interface OnHomeworkAdapterActionListener {
-
-        /**
-         * This method forwards an edit request from the adapter to the hosting activity.
-         *
-         * @see org.thecoders.smarttable.ui.activities.MainActivity.onHomeworkEditRequest
-         */
-        fun onHomeworkEditRequest(homework: Homework)
-
-        /**
-         * This method forwards a delete request for the given homework to the hosting activity.
-         * The activity then opens up a new ConfirmDeleteDialog.
-         *
-         * @see ConfirmDeleteDialog
-         * @see org.thecoders.smarttable.ui.activities.MainActivity.onHomeworkDeleteRequest
-         */
-        fun onHomeworkDeleteRequest(homework: Homework, adapter: HomeworkAdapter)
-    }
-
     companion object {
         private val LOG_TAG = HomeworkAdapter::class.java.simpleName
     }

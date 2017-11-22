@@ -13,13 +13,9 @@ class LessonItemTouchHelperCallback(private val mAdapter: LessonItemTouchHelperA
     private val ALPHA_FULL = 1.0f
 
     //Swipe not enabled
-    override fun isItemViewSwipeEnabled(): Boolean {
-        return false
-    }
+    override fun isItemViewSwipeEnabled(): Boolean = false
 
-    override fun isLongPressDragEnabled(): Boolean {
-        return true
-    }
+    override fun isLongPressDragEnabled(): Boolean = true
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         return if (recyclerView.layoutManager is GridLayoutManager) {

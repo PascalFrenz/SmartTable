@@ -18,6 +18,7 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_homeworklist.view.*
 import org.thecoders.smarttable.R
+import org.thecoders.smarttable.helpers.AbstractAdapterInterface
 import org.thecoders.smarttable.ui.activities.CreateHomeworkActivity
 import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
 import org.thecoders.smarttable.viewmodel.HomeworkViewModel
@@ -55,15 +56,20 @@ class HomeworklistFragment : Fragment() {
 
         mUnbinder = ButterKnife.bind(this, rootView)
 
-        val onHomeworkEditClickCallback =
+        val mHomeworkAdapterCallback =
                 try {
-                    activity as HomeworkAdapter.OnHomeworkAdapterActionListener
+                    activity as AbstractAdapterInterface
                 } catch (e: ClassCastException) {
                     throw ClassCastException(activity.toString() +
-                            " must implement HomeworkAdapter.OnHomeworkAdapterActionListener!")
+                            " must implement AbstractAdapterInterface!")
                 }
 
-        mHomeworkAdapter = HomeworkAdapter(WeakReference(activity), mutableListOf(), true, onHomeworkEditClickCallback)
+        mHomeworkAdapter = HomeworkAdapter(
+                WeakReference(activity),
+                mutableListOf(),
+                true,
+                mHomeworkAdapterCallback
+        )
 
         mHomeworkViewModel.homeworkList.observe(this, Observer {
             if (it != null) {

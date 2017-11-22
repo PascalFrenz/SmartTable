@@ -19,6 +19,7 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import kotlinx.android.synthetic.main.fragment_examlist.view.*
 import org.thecoders.smarttable.R
+import org.thecoders.smarttable.helpers.AbstractAdapterInterface
 import org.thecoders.smarttable.ui.activities.CreateExamActivity
 import org.thecoders.smarttable.ui.adapters.ExamAdapter
 import org.thecoders.smarttable.viewmodel.ExamViewModel
@@ -52,15 +53,20 @@ class ExamlistFragment : Fragment() {
 
         mUnbinder = ButterKnife.bind(this, rootView)
 
-        val onExamEditClickCallback =
+        val mExamAdapterCallback =
                 try {
-                    activity as ExamAdapter.OnExamEditClickListener
+                    activity as AbstractAdapterInterface
                 } catch (e: ClassCastException) {
-                    throw ClassCastException(activity.toString() + " must implement ExamAdapter.OnExamEditClickListener!")
+                    throw ClassCastException(activity.toString() + " must implement AbstractAdapterInterface!")
                 }
 
         //Create the Adapter
-        mExamAdapter = ExamAdapter(WeakReference(activity), mutableListOf(), true, onExamEditClickCallback)
+        mExamAdapter = ExamAdapter(
+                WeakReference(activity),
+                mutableListOf(),
+                true,
+                mExamAdapterCallback
+        )
 
         //Let the Adapter change upon change in the ViewModels data
         mExamViewModel.examList.observe(this, Observer {
