@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -23,8 +24,7 @@ import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.AppDatabase
 import org.thecoders.smarttable.data.pojos.Exam
 import org.thecoders.smarttable.data.pojos.Homework
-import org.thecoders.smarttable.ui.adapters.ExamAdapter
-import org.thecoders.smarttable.ui.adapters.HomeworkAdapter
+import org.thecoders.smarttable.helpers.AbstractAdapterInterface
 import org.thecoders.smarttable.ui.dialogs.*
 import org.thecoders.smarttable.ui.fragments.ExamlistFragment
 import org.thecoders.smarttable.ui.fragments.HomeworklistFragment
@@ -35,8 +35,7 @@ import org.thecoders.smarttable.viewmodel.SubjectViewModel
 
 class MainActivity : AppCompatActivity(),
         TimetableFragment.OnSubjectActionRequest,
-        ExamAdapter.OnExamEditClickListener,
-        HomeworkAdapter.OnHomeworkAdapterActionListener,
+        AbstractAdapterInterface,
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
 
@@ -227,64 +226,53 @@ class MainActivity : AppCompatActivity(),
     }
 
     private lateinit var mEditExamDialog: EditExamDialog
-
-    override fun onExamEditRequest(exam: Exam) {
-        val ft = supportFragmentManager.beginTransaction()
-        val prev = supportFragmentManager.findFragmentByTag("editExamDialog")
-        if(prev != null)
-            ft.remove(prev)
-        ft.addToBackStack(null)
-
-        //Pack the exam that should be edited into a bundle
-        val bundle = Bundle()
-        bundle.putLong(Exam.ID, exam.id)
-        bundle.putString(Exam.SUBJECT, exam.subject)
-        bundle.putString(Exam.TOPIC, exam.topic)
-        bundle.putSerializable(Exam.DATE, exam.date)
-        bundle.putString(Exam.GRADE, exam.grade)
-
-        //Note: Bundle is passed here!
-        mEditExamDialog = EditExamDialog.newInstance(bundle,mSubjectViewModel, mExamViewModel)
-        mEditExamDialog.show(ft, "editExamDialog")
-    }
-
-    override fun onExamDeleteRequest(exam: Exam, adapter: ExamAdapter) {
-        val ft = supportFragmentManager.beginTransaction()
-        val prev = supportFragmentManager.findFragmentByTag("confirmDeleteDialog")
-        if(prev != null)
-            ft.remove(prev)
-        ft.addToBackStack(null)
-
-        val delDialog = ConfirmDeleteDialog()
-        delDialog.objectAdapter = adapter
-        delDialog.objectToDelete = exam
-        delDialog.show(ft, "confirmDeleteDialog")
-    }
-
     private lateinit var mEditHomeworkDialog: EditHomeworkDialog
 
-    override fun onHomeworkEditRequest(homework: Homework) {
+    override fun onObjectEditRequest(toEdit: Any) {
         val ft = supportFragmentManager.beginTransaction()
-        val prev = supportFragmentManager.findFragmentByTag("editHomeworkFragment")
-        if (prev != null)
+        val prev = supportFragmentManager.findFragmentByTag("editObjectDialog")
+        if(prev != null)
             ft.remove(prev)
         ft.addToBackStack(null)
 
-        val bundle = Bundle()
-        bundle.putLong(Homework.ID, homework.id)
-        bundle.putString(Homework.SUBJECT, homework.subject)
-        bundle.putString(Homework.TASK, homework.task)
-        bundle.putSerializable(Homework.START, homework.date_start)
-        bundle.putSerializable(Homework.DEADLINE, homework.date_deadline)
-        bundle.putBoolean(Homework.FINISHED, homework.finished)
-        bundle.putString(Homework.EFFORT, homework.effort)
+        when(toEdit) {
+            is Exam -> {
+                val exam: Exam = toEdit
 
-        mEditHomeworkDialog = EditHomeworkDialog.newInstance(bundle, mSubjectViewModel, mHomeworkViewModel)
-        mEditHomeworkDialog.show(ft, "editHomeworkFragment")
+                //Pack the exam that should be edited into a bundle
+                val bundle = Bundle()
+                bundle.putLong(Exam.ID, exam.id)
+                bundle.putString(Exam.SUBJECT, exam.subject)
+                bundle.putString(Exam.TOPIC, exam.topic)
+                bundle.putSerializable(Exam.DATE, exam.date)
+                bundle.putString(Exam.GRADE, exam.grade)
+
+                //Note: Bundle is passed here!
+                mEditExamDialog = EditExamDialog.newInstance(bundle,mSubjectViewModel, mExamViewModel)
+                mEditExamDialog.show(ft, "editObjectDialog")
+            }
+
+            is Homework -> {
+                val homework: Homework = toEdit
+
+                val bundle = Bundle()
+                bundle.putLong(Homework.ID, homework.id)
+                bundle.putString(Homework.SUBJECT, homework.subject)
+                bundle.putString(Homework.TASK, homework.task)
+                bundle.putSerializable(Homework.START, homework.date_start)
+                bundle.putSerializable(Homework.DEADLINE, homework.date_deadline)
+                bundle.putBoolean(Homework.FINISHED, homework.finished)
+                bundle.putString(Homework.EFFORT, homework.effort)
+
+                mEditHomeworkDialog = EditHomeworkDialog.newInstance(bundle, mSubjectViewModel, mHomeworkViewModel)
+                mEditHomeworkDialog.show(ft, "editHomeworkFragment")
+            }
+            else -> {}
+        }
+
     }
 
-
-    override fun onHomeworkDeleteRequest(homework: Homework, adapter: HomeworkAdapter) {
+    override fun onObjectDeleteRequest(toDelete: Any, adapter: RecyclerView.Adapter<*>) {
         val ft = supportFragmentManager.beginTransaction()
         val prev = supportFragmentManager.findFragmentByTag("confirmDeleteDialog")
         if(prev != null)
@@ -293,7 +281,7 @@ class MainActivity : AppCompatActivity(),
 
         val delDialog = ConfirmDeleteDialog()
         delDialog.objectAdapter = adapter
-        delDialog.objectToDelete = homework
+        delDialog.objectToDelete = toDelete
         delDialog.show(ft, "confirmDeleteDialog")
     }
 

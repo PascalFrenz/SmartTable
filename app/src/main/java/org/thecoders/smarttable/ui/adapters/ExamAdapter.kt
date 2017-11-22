@@ -2,15 +2,16 @@ package org.thecoders.smarttable.ui.adapters
 
 import android.content.Context
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
+import org.thecoders.smarttable.helpers.AbstractAdapterInterface
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -19,14 +20,38 @@ import java.util.*
  */
 
 class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exam>, val enableEdit: Boolean,
-                  val callback: OnExamEditClickListener) :
+                  val callback: AbstractAdapterInterface) :
         RecyclerView.Adapter<ExamAdapter.ExamViewHolder>() {
 
     val context: Context? by lazy(weakContext::get)
 
-    interface OnExamEditClickListener {
-        fun onExamEditRequest(exam: Exam)
-        fun onExamDeleteRequest(exam: Exam, adapter: ExamAdapter)
+    var multiSelect: Boolean = false
+    var selectedItems: MutableList<Exam> = mutableListOf()
+
+    private val actionModeCallbacks: ActionMode.Callback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            multiSelect = true
+            menu.add("Delete")
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            return false
+        }
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            //TODO: Noch nicht optimal -> Für jedes Element wird der ConfirmDeleteDialog aufgerufen.
+            selectedItems.forEach {
+                this@ExamAdapter.callback.onObjectDeleteRequest(it, this@ExamAdapter as RecyclerView.Adapter<*>)
+            }
+
+            mode.finish()
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+
+        }
     }
 
     companion object {
@@ -63,14 +88,15 @@ class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exa
             mDate.text = "$timeToExam days left ($examDate)"
 
             if (enableEdit) {
-                mEditIcon.setOnClickListener { callback.onExamEditRequest(exam) }
+                mEditIcon.setOnClickListener { callback.onObjectEditRequest(exam) }
             } else {
                 mEditIcon.isClickable = false
                 mEditIcon.visibility = View.INVISIBLE
             }
 
             itemView.setOnLongClickListener {
-                callback.onExamDeleteRequest(exam, this@ExamAdapter)
+                //callback.onExamDeleteRequest(exam, this@ExamAdapter)
+                (itemView.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
                 return@setOnLongClickListener true
             }
         }

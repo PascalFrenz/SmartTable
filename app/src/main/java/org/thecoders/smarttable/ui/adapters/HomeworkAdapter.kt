@@ -12,6 +12,7 @@ import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Homework
+import org.thecoders.smarttable.helpers.AbstractAdapterInterface
 import org.thecoders.smarttable.ui.dialogs.ConfirmDeleteDialog
 import java.lang.ref.WeakReference
 import java.util.*
@@ -35,7 +36,7 @@ import java.util.*
 
  */
 class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList<Homework>, val enableEdit: Boolean,
-                      val callback: OnHomeworkAdapterActionListener) :
+                      val callback: AbstractAdapterInterface) :
         RecyclerView.Adapter<HomeworkAdapter.HomeworkViewHolder>() {
 
     private val context: Context? by lazy(weakContext::get)
@@ -100,7 +101,7 @@ class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList
             //When editing is enabled, pass an edit request up to
             //the hosting activity
             if (enableEdit) {
-                mEditIcon.setOnClickListener { callback.onHomeworkEditRequest(homework) }
+                mEditIcon.setOnClickListener { callback.onObjectEditRequest(homework) }
             } else {
                 mEditIcon.isClickable = false
                 mEditIcon.visibility = View.INVISIBLE
@@ -109,7 +110,7 @@ class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList
             //Implementing the delete feature here and pass a delete request up to
             //the hosting activity
             itemView.setOnLongClickListener {
-                callback.onHomeworkDeleteRequest(homework, this@HomeworkAdapter)
+                callback.onObjectDeleteRequest(homework, this@HomeworkAdapter)
                 return@setOnLongClickListener true
             }
         }
