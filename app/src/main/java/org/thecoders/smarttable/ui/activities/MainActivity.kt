@@ -92,20 +92,21 @@ class MainActivity : AppCompatActivity(),
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         mSharedFab = activity_main_fab
         mSharedFab?.visibility = View.INVISIBLE     //Making the fab invisible here to ensure it
-                                                    //is not shown at startup
+        //is not shown at startup
 
         // Set up the ViewPager with the sections adapter.
         activity_main_viewpager.adapter = mSectionsPagerAdapter
         activity_main_viewpager.currentItem = mCurrentPage
-        activity_main_viewpager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+        activity_main_viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
-                when(state) {
+                when (state) {
                     ViewPager.SCROLL_STATE_DRAGGING -> {
-                        if(mSharedFab?.isShown as Boolean) mSharedFab?.hide()
-                        else { }
+                        if (mSharedFab?.isShown as Boolean) mSharedFab?.hide()
+                        else {
+                        }
                     }
                     ViewPager.SCROLL_STATE_IDLE -> {
-                        when(activity_main_viewpager.currentItem) {
+                        when (activity_main_viewpager.currentItem) {
                             0 -> {
                                 (activity_main_viewpager.adapter
                                         .instantiateItem(activity_main_viewpager, 0) as ExamlistFragment)
@@ -121,7 +122,7 @@ class MainActivity : AppCompatActivity(),
                                         .instantiateItem(activity_main_viewpager, 2) as HomeworklistFragment)
                                         .shareFab(null)
 
-                                if(mSharedFab?.isShown as Boolean) mSharedFab?.hide()
+                                if (mSharedFab?.isShown as Boolean) mSharedFab?.hide()
                             }
                             2 -> {
                                 (activity_main_viewpager.adapter
@@ -149,9 +150,9 @@ class MainActivity : AppCompatActivity(),
                 activity_main_viewpager.currentItem = mCurrentPage
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {  }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
 
-            override fun onTabReselected(tab: TabLayout.Tab) {  }
+            override fun onTabReselected(tab: TabLayout.Tab) {}
         })
     }
 
@@ -231,11 +232,11 @@ class MainActivity : AppCompatActivity(),
     override fun onObjectEditRequest(toEdit: Any) {
         val ft = supportFragmentManager.beginTransaction()
         val prev = supportFragmentManager.findFragmentByTag("editObjectDialog")
-        if(prev != null)
+        if (prev != null)
             ft.remove(prev)
         ft.addToBackStack(null)
 
-        when(toEdit) {
+        when (toEdit) {
             is Exam -> {
                 val exam: Exam = toEdit
 
@@ -248,7 +249,7 @@ class MainActivity : AppCompatActivity(),
                 bundle.putString(Exam.GRADE, exam.grade)
 
                 //Note: Bundle is passed here!
-                mEditExamDialog = EditExamDialog.newInstance(bundle,mSubjectViewModel, mExamViewModel)
+                mEditExamDialog = EditExamDialog.newInstance(bundle, mSubjectViewModel, mExamViewModel)
                 mEditExamDialog.show(ft, "editObjectDialog")
             }
 
@@ -267,7 +268,8 @@ class MainActivity : AppCompatActivity(),
                 mEditHomeworkDialog = EditHomeworkDialog.newInstance(bundle, mSubjectViewModel, mHomeworkViewModel)
                 mEditHomeworkDialog.show(ft, "editHomeworkFragment")
             }
-            else -> {}
+            else -> {
+            }
         }
 
     }
@@ -275,7 +277,7 @@ class MainActivity : AppCompatActivity(),
     override fun onObjectDeleteRequest(toDelete: Any, adapter: RecyclerView.Adapter<*>) {
         val ft = supportFragmentManager.beginTransaction()
         val prev = supportFragmentManager.findFragmentByTag("confirmDeleteDialog")
-        if(prev != null)
+        if (prev != null)
             ft.remove(prev)
         ft.addToBackStack(null)
 
@@ -310,9 +312,6 @@ class MainActivity : AppCompatActivity(),
     }
 
 
-
-
-
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -320,23 +319,23 @@ class MainActivity : AppCompatActivity(),
     inner class SectionsPagerAdapter internal constructor(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment =
-            when (position) {
-                0 -> ExamlistFragment.newInstance(mExamViewModel)
-                1 -> TimetableFragment()
-                2 -> HomeworklistFragment.newInstance(mHomeworkViewModel)
-                else -> throw Exception(
-                        "Something went wrong while loading fragments... position out of bounds?")
-            }
+                when (position) {
+                    0 -> ExamlistFragment.newInstance(mExamViewModel)
+                    1 -> TimetableFragment()
+                    2 -> HomeworklistFragment.newInstance(mHomeworkViewModel)
+                    else -> throw Exception(
+                            "Something went wrong while loading fragments... position out of bounds?")
+                }
 
         override fun getCount(): Int = 3
 
         override fun getPageTitle(position: Int): CharSequence =
-            when (position) {
-                0 -> "Exams"
-                1 -> "Timetable"
-                2 -> "Homework"
-                else -> "Error"
-            }
+                when (position) {
+                    0 -> "Exams"
+                    1 -> "Timetable"
+                    2 -> "Homework"
+                    else -> "Error"
+                }
 
     }
 }

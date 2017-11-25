@@ -1,6 +1,8 @@
 package org.thecoders.smarttable.ui.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.view.ActionMode
@@ -12,8 +14,8 @@ import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Exam
 import org.thecoders.smarttable.helpers.AbstractAdapterInterface
+import org.thecoders.smarttable.helpers.TimeHelper
 import java.lang.ref.WeakReference
-import java.util.*
 
 /**
  * Created by frenz on 24.06.2017.
@@ -35,14 +37,12 @@ class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exa
             return true
         }
 
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
-            return false
-        }
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             //TODO: Noch nicht optimal -> Für jedes Element wird der ConfirmDeleteDialog aufgerufen.
             selectedItems.forEach {
-                this@ExamAdapter.callback.onObjectDeleteRequest(it, this@ExamAdapter as RecyclerView.Adapter<*>)
+                this@ExamAdapter.callback.onObjectDeleteRequest(it, this@ExamAdapter)
             }
 
             mode.finish()
@@ -50,7 +50,9 @@ class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exa
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
-
+            multiSelect = false
+            selectedItems.clear()
+            notifyDataSetChanged()
         }
     }
 
@@ -59,6 +61,7 @@ class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exa
     }
 
     inner class ExamViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         fun bind(position: Int) {
             //Init the views inside the itemView
             val mSubject: TextView = itemView.findViewById(R.id.item_exam_subject)
@@ -70,17 +73,17 @@ class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exa
             val exam = data[position]
 
             //Setup all the fields according to the items data
-            val today = DateConverter.dateFormat.format(Date())
+            val timeToExam = TimeHelper.calcTimeToDeadline(exam.date)
             val examDate = DateConverter.dateFormat.format(exam.date)
 
-            val timeToExam = DateConverter().getDifference(today, examDate)
-
-            when {
-                timeToExam <= 1 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority4))
-                timeToExam <= 3 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority3))
-                timeToExam <= 7 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority2))
-                timeToExam <= 14 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority1))
-                else -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.test_priority0))
+            if (selectedItems.contains(exam)) {
+                itemView.setBackgroundColor(Color.LTGRAY)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    itemView.elevation = 12f
+            } else {
+                itemView.setBackgroundColor(getExamColor(exam))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    itemView.elevation = 0f
             }
 
             mSubject.text = "${exam.subject}: "
@@ -96,8 +99,41 @@ class ExamAdapter(weakContext: WeakReference<Context>, var data: MutableList<Exa
 
             itemView.setOnLongClickListener {
                 //callback.onExamDeleteRequest(exam, this@ExamAdapter)
-                (itemView.context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
+                (context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
+                selectItem(exam)
                 return@setOnLongClickListener true
+            }
+
+            itemView.setOnClickListener {
+                selectItem(exam)
+            }
+        }
+
+        private fun getExamColor(exam: Exam): Int {
+            val timeToExam = TimeHelper.calcTimeToDeadline(exam.date)
+
+            return when {
+                timeToExam <= 1 -> ContextCompat.getColor(context, R.color.test_priority4)
+                timeToExam <= 3 -> ContextCompat.getColor(context, R.color.test_priority3)
+                timeToExam <= 7 -> ContextCompat.getColor(context, R.color.test_priority2)
+                timeToExam <= 14 -> ContextCompat.getColor(context, R.color.test_priority1)
+                else -> ContextCompat.getColor(context, R.color.test_priority0)
+            }
+        }
+
+        private fun selectItem(item: Exam) {
+            if (multiSelect) {
+                if (selectedItems.contains(item)) {
+                    selectedItems.remove(item)
+                    itemView.setBackgroundColor(getExamColor(item))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        itemView.elevation = 0f
+                } else {
+                    selectedItems.add(item)
+                    itemView.setBackgroundColor(Color.LTGRAY)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        itemView.elevation = 12f
+                }
             }
         }
     }

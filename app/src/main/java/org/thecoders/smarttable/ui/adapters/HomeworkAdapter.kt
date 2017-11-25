@@ -1,21 +1,23 @@
 package org.thecoders.smarttable.ui.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.view.ActionMode
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import org.thecoders.smarttable.R
 import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.data.pojos.Homework
 import org.thecoders.smarttable.helpers.AbstractAdapterInterface
+import org.thecoders.smarttable.helpers.TimeHelper
 import org.thecoders.smarttable.ui.dialogs.ConfirmDeleteDialog
 import java.lang.ref.WeakReference
-import java.util.*
 
 /**
  * Created by Pascal on 31.03.2016.
@@ -41,6 +43,35 @@ class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList
 
     private val context: Context? by lazy(weakContext::get)
 
+    var multiSelect: Boolean = false
+    var selectedItems: MutableList<Homework> = mutableListOf()
+
+    private val actionModeCallbacks: ActionMode.Callback = object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            multiSelect = true
+            menu.add("Delete")
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            //TODO: Noch nicht optimal -> Für jedes Element wird der ConfirmDeleteDialog aufgerufen.
+            selectedItems.forEach {
+                this@HomeworkAdapter.callback.onObjectDeleteRequest(it, this@HomeworkAdapter)
+            }
+
+            mode.finish()
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode) {
+            multiSelect = false
+            selectedItems.clear()
+            notifyDataSetChanged()
+        }
+    }
+
     companion object {
         private val LOG_TAG = HomeworkAdapter::class.java.simpleName
     }
@@ -53,22 +84,22 @@ class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList
             val mEditIcon: ImageView = itemView.findViewById(R.id.item_homework_edit)
 
             val homework = data[position]
+            Log.v(LOG_TAG, homework.toString())
 
-            val today = DateConverter.dateFormat.format(Date())
             val deadline = DateConverter.dateFormat.format(homework.date_deadline)
+            val timeToDeadline = TimeHelper.calcTimeToDeadline(homework.date_deadline)
 
-            val timeToDeadline = DateConverter().getDifference(today, deadline)
 
-            when {
-                homework.finished -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.done))
-                timeToDeadline <= 1 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority4))
-                timeToDeadline <= 3 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority3))
-                timeToDeadline <= 7 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority2))
-                timeToDeadline <= 14 -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority1))
-                else -> itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.homework_priority0))
+            if (selectedItems.contains(homework)) {
+                itemView.setBackgroundColor(Color.LTGRAY)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    itemView.elevation = 12f
+            } else {
+                itemView.setBackgroundColor(getHomeworkColor(homework))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    itemView.elevation = 0f
             }
 
-            Log.v(LOG_TAG, homework.toString())
 
             mSubject.text = "${homework.subject}: "
             mTask.text = "${homework.task} (${homework.effort})"
@@ -87,8 +118,51 @@ class HomeworkAdapter(weakContext: WeakReference<Context>, var data: MutableList
             //Implementing the delete feature here and pass a delete request up to
             //the hosting activity
             itemView.setOnLongClickListener {
-                callback.onObjectDeleteRequest(homework, this@HomeworkAdapter)
+                //callback.onObjectDeleteRequest(homework, this@HomeworkAdapter)
+                (context as AppCompatActivity).startSupportActionMode(actionModeCallbacks)
+                selectItem(homework)
                 return@setOnLongClickListener true
+            }
+
+            itemView.setOnClickListener {
+                selectItem(homework)
+            }
+        }
+
+
+        private fun getHomeworkColor(homework: Homework): Int {
+            val timeToDeadline = TimeHelper.calcTimeToDeadline(homework.date_deadline)
+
+            return if (homework.finished) {
+                ContextCompat.getColor(context, R.color.done)
+            } else {
+                when {
+                    timeToDeadline <= 1 -> ContextCompat.getColor(context, R.color.homework_priority4)
+                    timeToDeadline <= 3 -> ContextCompat.getColor(context, R.color.homework_priority3)
+                    timeToDeadline <= 7 -> ContextCompat.getColor(context, R.color.homework_priority2)
+                    timeToDeadline <= 14 -> ContextCompat.getColor(context, R.color.homework_priority1)
+                    else -> ContextCompat.getColor(context, R.color.homework_priority0)
+                }
+            }
+
+
+        }
+
+        private fun selectItem(item: Homework) {
+            if (multiSelect) {
+                if (selectedItems.contains(item)) {
+                    selectedItems.remove(item)
+                    itemView.setBackgroundColor(getHomeworkColor(item))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        itemView.elevation = 0f
+                    }
+                } else {
+                    selectedItems.add(item)
+                    itemView.setBackgroundColor(Color.LTGRAY)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        itemView.elevation = 12f
+                    }
+                }
             }
         }
     }

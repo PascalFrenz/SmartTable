@@ -2,7 +2,9 @@ package org.thecoders.smarttable.helpers
 
 import android.content.Context
 import android.preference.PreferenceManager
+import org.thecoders.smarttable.data.DateConverter
 import org.thecoders.smarttable.ui.fragments.SettingsFragment
+import java.util.*
 
 /**
  * Created by frenz on 31.07.2017.
@@ -91,6 +93,12 @@ class TimeHelper {
 
             return buildTiming(listOf(addTime(startTime, minutes), addTime(endTime, minutes)))
         }
+
+        fun calcTimeToDeadline(deadline: Date) =
+                DateConverter().getDifference(
+                        start = DateConverter.dateFormat.format(Date()),
+                        end = DateConverter.dateFormat.format(deadline)
+                )
     }
 
 
